@@ -187,7 +187,6 @@ version_info = get_version_info(__version__)
 ```
 
 - [ ] Optionally add [configuration](#Configuration) to the target repository if non-standard options or hooks are needed.
-- [ ] Optionally add workflow for `cancel` to cancel previous workflow runs when a new one is started - see [cancel.yml](./.github/workflows/cancel.yml)
 - [ ] If desired, add `check_release` job, changelog, and `tbump` support to other active release branches
 - [ ] Try out the `Draft Changelog` and `Draft Release` process against a fork of the target repo first so you don't accidentally push tags and GitHub releases to the source repository.
 
