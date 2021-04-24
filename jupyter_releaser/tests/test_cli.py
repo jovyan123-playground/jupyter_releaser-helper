@@ -242,10 +242,16 @@ def test_check_links(py_package, runner):
     text = readme.read_text(encoding="utf-8")
     text += "\nhttps://apod.nasa.gov/apod/astropix.html"
     readme.write_text(text, encoding="utf-8")
-    util.run("git commit -a -m 'update readme'")
+
+    pyproject = util.toml.loads(util.PYPROJECT.read_text(encoding="utf-8"))
+    pyproject["tool"] = {"jupyter-releaser": dict()}
+    pyproject["tool"]["jupyter-releaser"]["options"] = {"ignore-glob": ["FOO.md"]}
+    util.PYPROJECT.write_text(util.toml.dumps(pyproject), encoding="utf-8")
+
+    util.run("git commit -a -m 'update files'")
 
     runner(["prep-git", "--git-url", py_package])
-    runner(["check-links"])
+    # runner(["check-links"])
 
     foo = Path(util.CHECKOUT_NAME) / "FOO.md"
     foo.write_text("http://127.0.0.1:5555")
@@ -253,7 +259,7 @@ def test_check_links(py_package, runner):
     bar = Path(util.CHECKOUT_NAME) / "BAR BAZ.md"
     bar.write_text("")
 
-    runner(["check-links", "--ignore-glob", "FOO.md"])
+    runner(["check-links"])
 
 
 def test_check_changelog(py_package, tmp_path, mocker, runner, git_prep):
