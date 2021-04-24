@@ -66,7 +66,7 @@ class ReleaseHelperGroup(click.Group):
                 arg = f"--{name.replace('_', '-')}"
                 # Defer to cli overrides
                 if arg not in ctx.args:
-                    val = options.get(name, options[name.replace("_", "-")])
+                    val = options.get(name, options.get(name.replace("_", "-")))
                     if isinstance(val, list):
                         for v in val:
                             ctx.args.append(arg)
