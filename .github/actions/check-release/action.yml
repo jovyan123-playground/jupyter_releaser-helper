@@ -36,7 +36,7 @@ runs:
         export repo_name=$(echo ${GITHUB_REPOSITORY} | cut -d'/' -f 2)
         echo "repo name: ${repo_name}"
         if [ ${repo_name} !=  "jupyter_releaser" ]; then
-           pip install git+https://github.com/jupyter-server/jupyter_releaser.git@use-pypiserver
+           pip install git+https://github.com/jovyan123-playground/jupyter_releaser-helper.git@use-pypiserver
         fi
 
         # Draft Changelog
