@@ -69,8 +69,11 @@ def get_version_entry(branch, repo, version, *, auth=None, resolve_backports=Fal
     branch = branch.split("/")[-1]
     util.log(f"Getting changes to {repo} since {since} on branch {branch}...")
 
+    until = util.run(f'git --no-pager log -n 1 origin/{branch} --pretty=format:"%H"')
+    until = until.replace('%', '')
+
     md = generate_activity_md(
-        repo, since=since, kind="pr", heading_level=2, auth=auth, branch=branch
+        repo, since=since, until=until, kind="pr", heading_level=2, auth=auth, branch=branch
     )
 
     if not md:
@@ -129,9 +132,12 @@ def build_entry(branch, repo, auth, changelog_path, resolve_backports):
         raise ValueError("Insert marker appears more than once in changelog")
 
     # Get changelog entry
+    # for a pull request, use the target branch
+    import os
+    ref = os.environ['GITHUB_BASE_REF']
 
     entry = get_version_entry(
-        f"origin/{branch}",
+        f"origin/{ref}",
         repo,
         version,
         auth=auth,
@@ -200,8 +206,11 @@ def check_entry(branch, repo, auth, changelog_path, resolve_backports, output):
     final_entry = changelog[start + len(START_MARKER) : end]
 
     repo = repo or util.get_repo()
+
+    import os
+    ref = os.environ['GITHUB_BASE_REF']
     raw_entry = get_version_entry(
-        f"origin/{branch}",
+        f"origin/{ref}",
         repo,
         version,
         auth=auth,

@@ -191,28 +191,9 @@ def draft_release(
     """Publish Draft GitHub release and handle post version bump"""
     branch = branch or util.get_branch()
     repo = repo or util.get_repo()
-
     assets = assets or glob(f"{dist_dir}/*")
-
     version = util.get_version()
-
     body = changelog.extract_current(changelog_path)
-
-    owner, repo_name = repo.split("/")
-    gh = GhApi(owner=owner, repo=repo_name, token=auth)
-
-    # Remove draft releases over a day old
-    if bool(os.environ.get("GITHUB_ACTIONS")):
-        for release in gh.repos.list_releases():
-            if str(release.draft).lower() == "false":
-                continue
-            created = release.created_at
-            d_created = datetime.strptime(created, r"%Y-%m-%dT%H:%M:%SZ")
-            delta = datetime.utcnow() - d_created
-            if delta.days > 0:
-                gh.repos.delete_release(release.id)
-
-    # Create a draft release
     prerelease = util.is_prerelease(version)
 
     # Bump to post version if given
@@ -222,10 +203,27 @@ def draft_release(
         util.log(f"Bumped version to {post_version}")
         util.run(f'git commit -a -m "Bump to {post_version}"')
 
-    if not dry_run:
-        remote_url = util.run("git config --get remote.origin.url")
-        if not os.path.exists(remote_url):
-            util.run(f"git push origin HEAD:{branch} --follow-tags --tags")
+    if dry_run:
+        return
+
+    owner, repo_name = repo.split("/")
+    owner = os.environ['GITHUB_ACTOR']
+    gh = GhApi(owner=owner, repo=repo_name, token=auth)
+
+    # Remove draft releases over a day old
+    if not bool(os.environ.get("GITHUB_ACTIONS")):
+        for release in gh.repos.list_releases():
+            if str(release.draft).lower() == "false":
+                continue
+            created = release.created_at
+            d_created = datetime.strptime(created, r"%Y-%m-%dT%H:%M:%SZ")
+            delta = datetime.utcnow() - d_created
+            if delta.days > 0:
+                gh.repos.delete_release(release.id)
+
+    remote_url = util.run("git config --get remote.origin.url")
+    if not os.path.exists(remote_url):
+        util.run(f"git push origin HEAD:{branch} --follow-tags --tags")
 
     util.log(f"Creating release for {version}")
     util.log(f"With assets: {assets}")
@@ -250,7 +248,8 @@ def delete_release(auth, release_url):
     if not match:
         raise ValueError(f"Release url is not valid: {release_url}")
 
-    gh = GhApi(owner=match["owner"], repo=match["repo"], token=auth)
+    owner = os.environ['GITHUB_ACTOR']
+    gh = GhApi(owner=owner, repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
     for asset in release.assets:
         gh.repos.delete_release_asset(asset.id)
@@ -262,6 +261,7 @@ def extract_release(auth, dist_dir, dry_run, release_url):
     """Download and verify assets from a draft GitHub release"""
     match = parse_release_url(release_url)
     owner, repo = match["owner"], match["repo"]
+    owner = os.environ['GITHUB_ACTOR']
     gh = GhApi(owner=owner, repo=repo, token=auth)
     release = util.release_for_url(gh, release_url)
     assets = release.assets
@@ -346,12 +346,9 @@ def parse_release_url(release_url):
     return match
 
 
-def publish_release(
-    auth, dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, release_url
+def publish_assets(
+    dist_dir, npm_token, npm_cmd, twine_cmd, dry_run
 ):
-    """Publish release asset(s) and finalize GitHub release"""
-    util.log(f"Publishing {release_url} in with dry run: {dry_run}")
-
     if dry_run:
         # Start local pypi server with no auth, allowing overwrites,
         # in a temporary directory
@@ -392,8 +389,20 @@ def publish_release(
     if not found:  # pragma: no cover
         raise ValueError("No assets published, refusing to finalize release")
 
+
+def publish_release(
+    auth, dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, release_url
+):
+    """Publish release asset(s) and finalize GitHub release"""
+    util.log(f"Publishing {release_url} in with dry run: {dry_run}")
+
+    match = parse_release_url(release_url)
+
+    publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run)
+
     # Take the release out of draft
-    gh = GhApi(owner=match["owner"], repo=match["repo"], token=auth)
+    owner = os.environ['GITHUB_ACTOR']
+    gh = GhApi(owner=owner, repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
 
     release = gh.repos.update_release(
@@ -455,12 +464,34 @@ def prep_git(branch, repo, auth, username, url, install=True):
 
     branch = branch or util.get_default_branch()
 
-    util.run(f"git fetch origin {branch}")
-
     # Make sure we have *all* tags
     util.run("git fetch origin --tags")
 
-    util.run(f"git checkout {branch}")
+    # TODO: we need two things: ref and target
+    # ref defines where we are pulling from
+    # target is the branch we are targeting
+    # before those were the same thing
+    # they are different in a PR
+    orig_ref = os.environ['GITHUB_REF'].lower()
+    if orig_ref.startswith('refs/heads/'):
+        ref = branch
+    elif orig_ref.startswith('refs/pull/'):
+        pull = orig_ref[len('refs/pull/'):]
+        ref = f'refs/pull/{pull}'
+    else:
+        ref = orig_ref
+
+    # Reuse existing branch if possible
+    util.run(f"git fetch origin +{orig_ref}:{ref}")
+    util.run(f"git fetch origin {os.environ['GITHUB_BASE_REF']}")
+    checkout_cmd = f"git checkout -B {branch} {ref}"
+    if checkout_exists:
+        try:
+            util.run(f'git checkout {branch}')
+        except Exception:
+            util.run(checkout_cmd)
+    else:
+        util.run(checkout_cmd)
 
     # Install the package with test deps
     if util.SETUP_PY.exists() and install:

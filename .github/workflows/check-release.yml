@@ -35,6 +35,8 @@ jobs:
           key: ${{ runner.os }}-linkcheck-${{ hashFiles('**/.md') }}-md-links
           restore-keys: |
             ${{ runner.os }}-linkcheck-
+      - name: Print env
+        run: env
       - name: Upgrade packaging dependencies
         run: |
           pip install --upgrade pip setuptools wheel --user
