@@ -331,9 +331,6 @@ def extract_release(auth, dist_dir, dry_run, release_url):
                     util.log("Mismatched sha!")
 
         if not valid:  # pragma: no cover
-            import pdb
-
-            pdb.set_trace()
             raise ValueError(f"Invalid file {asset.name}")
 
 
@@ -347,9 +344,14 @@ def parse_release_url(release_url):
 
 
 def publish_assets(
-    dist_dir, npm_token, npm_cmd, twine_cmd, dry_run
+    dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkout_dir
 ):
     """Publish release asset(s)"""
+    if use_checkout_dir:
+         if not osp.exists(util.CHECKOUT_NAME):
+            raise ValueError("Please run prep-git first")
+        os.chdir(util.CHECKOUT_NAME)
+
     if dry_run:
         # Start local pypi server with no auth, allowing overwrites,
         # in a temporary directory

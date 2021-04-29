@@ -446,13 +446,18 @@ def extract_release(auth, dist_dir, dry_run, release_url):
     envvar="TWINE_COMMAND",
     default="twine upload",
 )
+@click.option(
+    "--use_checkout_dir",
+    help="Use the checkout directory",
+    is_flag=True
+)
 @add_options(dry_run_options)
 def publish_assets(
-    dist_dir, npm_token, npm_cmd, twine_cmd, dry_run
+    dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkout_dir
 ):
     """Publish release asset(s)"""
     lib.publish_assets(
-        dist_dir, npm_token, npm_cmd, twine_cmd, dry_run
+        dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkout_dir
     )
 
 
