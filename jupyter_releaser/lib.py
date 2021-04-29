@@ -205,7 +205,7 @@ def draft_release(
         return
 
     owner, repo_name = repo.split("/")
-    owner = os.environ['GITHUB_ACTOR']
+    owner = os.environ["GITHUB_ACTOR"]
     gh = GhApi(owner=owner, repo=repo_name, token=auth)
 
     # Remove draft releases over a day old
@@ -246,7 +246,7 @@ def delete_release(auth, release_url):
     if not match:
         raise ValueError(f"Release url is not valid: {release_url}")
 
-    owner = os.environ['GITHUB_ACTOR']
+    owner = os.environ["GITHUB_ACTOR"]
     gh = GhApi(owner=owner, repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
     for asset in release.assets:
@@ -259,7 +259,7 @@ def extract_release(auth, dist_dir, dry_run, release_url):
     """Download and verify assets from a draft GitHub release"""
     match = parse_release_url(release_url)
     owner, repo = match["owner"], match["repo"]
-    owner = os.environ['GITHUB_ACTOR']
+    owner = os.environ["GITHUB_ACTOR"]
     gh = GhApi(owner=owner, repo=repo, token=auth)
     release = util.release_for_url(gh, release_url)
     assets = release.assets
@@ -341,9 +341,7 @@ def parse_release_url(release_url):
     return match
 
 
-def publish_assets(
-    dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkout_dir
-):
+def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkout_dir):
     """Publish release asset(s)"""
     if use_checkout_dir:
         if not osp.exists(util.CHECKOUT_NAME):
@@ -389,16 +387,14 @@ def publish_assets(
         raise ValueError("No assets published, refusing to finalize release")
 
 
-def publish_release(
-    auth, release_url, dry_run
-):
+def publish_release(auth, release_url, dry_run):
     """Publish GitHub release"""
     util.log(f"Publishing {release_url} in with dry run: {dry_run}")
 
     match = parse_release_url(release_url)
 
     # Take the release out of draft
-    owner = os.environ['GITHUB_ACTOR']
+    owner = os.environ["GITHUB_ACTOR"]
     gh = GhApi(owner=owner, repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
 
@@ -465,11 +461,11 @@ def prep_git(ref, branch, repo, auth, username, url, install=True):
     util.run("git fetch origin --tags")
 
     # Handle the ref
-    if ref.startswith('refs/heads/'):
+    if ref.startswith("refs/heads/"):
         ref_alias = branch
-    elif ref.startswith('refs/pull/'):
-        pull = ref[len('refs/pull/'):]
-        ref_alias = f'refs/pull/{pull}'
+    elif ref.startswith("refs/pull/"):
+        pull = ref[len("refs/pull/") :]
+        ref_alias = f"refs/pull/{pull}"
     else:
         ref_alias = ref
 
@@ -483,7 +479,7 @@ def prep_git(ref, branch, repo, auth, username, url, install=True):
 
     if checkout_exists:
         try:
-            util.run(f'git checkout {branch}')
+            util.run(f"git checkout {branch}")
         except Exception:
             util.run(checkout_cmd)
     else:

@@ -70,10 +70,16 @@ def get_version_entry(branch, repo, version, *, auth=None, resolve_backports=Fal
     util.log(f"Getting changes to {repo} since {since} on branch {branch}...")
 
     until = util.run(f'git --no-pager log -n 1 origin/{branch} --pretty=format:"%H"')
-    until = until.replace('%', '')
+    until = until.replace("%", "")
 
     md = generate_activity_md(
-        repo, since=since, until=until, kind="pr", heading_level=2, auth=auth, branch=branch
+        repo,
+        since=since,
+        until=until,
+        kind="pr",
+        heading_level=2,
+        auth=auth,
+        branch=branch,
     )
 
     if not md:
@@ -134,7 +140,8 @@ def build_entry(ref, repo, auth, changelog_path, resolve_backports):
     # Get changelog entry
     # for a pull request, use the target branch
     import os
-    ref = os.environ['GITHUB_BASE_REF']
+
+    ref = os.environ["GITHUB_BASE_REF"]
 
     entry = get_version_entry(
         f"origin/{ref}",
