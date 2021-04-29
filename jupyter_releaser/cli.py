@@ -425,7 +425,7 @@ def delete_release(auth, release_url):
 @add_options(auth_options)
 @add_options(dist_dir_options)
 @add_options(dry_run_options)
-@click.argument("release_url", nargs=1)
+@click.argument("release-url", nargs=1)
 def extract_release(auth, dist_dir, dry_run, release_url):
     """Download and verify assets from a draft GitHub release"""
     lib.extract_release(auth, dist_dir, dry_run, release_url)
@@ -433,21 +433,21 @@ def extract_release(auth, dist_dir, dry_run, release_url):
 
 @main.command()
 @add_options(dist_dir_options)
-@click.option("--npm_token", help="A token for the npm release", envvar="NPM_TOKEN")
+@click.option("--npm-token", help="A token for the npm release", envvar="NPM_TOKEN")
 @click.option(
-    "--npm_cmd",
+    "--npm-cmd",
     help="The command to run for npm release",
     envvar="RH_NPM_COMMAND",
     default="npm publish",
 )
 @click.option(
-    "--twine_cmd",
+    "--twine-cmd",
     help="The twine to run for Python release",
     envvar="TWINE_COMMAND",
     default="twine upload",
 )
 @click.option(
-    "--use_checkout_dir",
+    "--use-checkout-dir",
     help="Use the checkout directory",
     is_flag=True
 )
@@ -463,7 +463,7 @@ def publish_assets(
 
 @main.command()
 @add_options(auth_options)
-@click.argument("release_url", nargs=1)
+@click.argument("release-url", nargs=1)
 def publish_release(
     auth, release_url
 ):
@@ -480,7 +480,7 @@ def publish_release(
 @add_options(changelog_path_options)
 @add_options(dry_run_options)
 @add_options(git_url_options)
-@click.argument("release_url")
+@click.argument("release-url")
 def forwardport_changelog(
     auth, branch, repo, username, changelog_path, dry_run, git_url, release_url
 ):
