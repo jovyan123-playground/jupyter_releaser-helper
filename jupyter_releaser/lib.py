@@ -157,13 +157,10 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
     util.actions_output("pr_url", pull.html_url)
 
 
-def tag_release(branch, repo, dist_dir, no_git_tag_workspace):
+def tag_release(dist_dir, no_git_tag_workspace):
     """Create release commit and tag"""
     # Get the new version
     version = util.get_version()
-
-    # Get the branch
-    branch = branch or util.get_branch()
 
     # Create the release commit
     util.create_release_commit(version, dist_dir)
@@ -178,6 +175,7 @@ def tag_release(branch, repo, dist_dir, no_git_tag_workspace):
 
 
 def draft_release(
+    ref,
     branch,
     repo,
     auth,
@@ -418,7 +416,7 @@ def publish_release(
     util.actions_output("release_url", release.html_url)
 
 
-def prep_git(branch, repo, auth, username, url, install=True):
+def prep_git(ref, branch, repo, auth, username, url, install=True):
     """Set up git"""
     repo = repo or util.get_repo()
 
@@ -466,24 +464,23 @@ def prep_git(branch, repo, auth, username, url, install=True):
     # Make sure we have *all* tags
     util.run("git fetch origin --tags")
 
-    # TODO: we need two things: ref and target
-    # ref defines where we are pulling from
-    # target is the branch we are targeting
-    # before those were the same thing
-    # they are different in a PR
-    orig_ref = os.environ['GITHUB_REF'].lower()
-    if orig_ref.startswith('refs/heads/'):
-        ref = branch
-    elif orig_ref.startswith('refs/pull/'):
-        pull = orig_ref[len('refs/pull/'):]
-        ref = f'refs/pull/{pull}'
+    # Handle the ref
+    if ref.startswith('refs/heads/'):
+        ref_alias = branch
+    elif ref.startswith('refs/pull/'):
+        pull = ref[len('refs/pull/'):]
+        ref_alias = f'refs/pull/{pull}'
     else:
-        ref = orig_ref
+        ref_alias = ref
 
     # Reuse existing branch if possible
-    util.run(f"git fetch origin +{orig_ref}:{ref}")
-    util.run(f"git fetch origin {os.environ['GITHUB_BASE_REF']}")
-    checkout_cmd = f"git checkout -B {branch} {ref}"
+    if ref:
+        util.run(f"git fetch origin +{ref}:{ref_alias}")
+        util.run(f"git fetch origin {ref}")
+        checkout_cmd = f"git checkout -B {branch} {ref_alias}"
+    else:
+        checkout_cmd = f"git checkout {branch}"
+
     if checkout_exists:
         try:
             util.run(f'git checkout {branch}')
@@ -502,7 +499,7 @@ def prep_git(branch, repo, auth, username, url, install=True):
 
 
 def forwardport_changelog(
-    auth, branch, repo, username, changelog_path, dry_run, git_url, release_url
+    auth, ref, branch, repo, username, changelog_path, dry_run, git_url, release_url
 ):
     """Forwardport Changelog Entries to the Default Branch"""
     # Set up the git repo with the branch
@@ -515,7 +512,7 @@ def forwardport_changelog(
 
     # We want to target the main branch
     orig_dir = os.getcwd()
-    branch = prep_git(None, repo, auth, username, git_url, install=False)
+    branch = prep_git(None, None, repo, auth, username, git_url, install=False)
     os.chdir(util.CHECKOUT_NAME)
 
     # Bail if the tag has been merged to the branch
@@ -573,7 +570,7 @@ def forwardport_changelog(
     body = title
 
     pr = make_changelog_pr(
-        auth, branch, repo, title, commit_message, body, dry_run=dry_run
+        auth, ref, branch, repo, title, commit_message, body, dry_run=dry_run
     )
 
     # Clean up after ourselves

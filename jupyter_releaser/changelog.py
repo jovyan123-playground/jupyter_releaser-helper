@@ -114,10 +114,10 @@ def get_version_entry(branch, repo, version, *, auth=None, resolve_backports=Fal
     return output
 
 
-def build_entry(branch, repo, auth, changelog_path, resolve_backports):
+def build_entry(ref, repo, auth, changelog_path, resolve_backports):
     """Build a python version entry"""
+    ref = ref or util.get_branch()
     repo = repo or util.get_repo()
-    branch = branch or util.get_branch()
 
     # Get the new version
     version = util.get_version()
@@ -184,9 +184,9 @@ def format(changelog):
     return re.sub(r"\n\n+$", r"\n", changelog)
 
 
-def check_entry(branch, repo, auth, changelog_path, resolve_backports, output):
+def check_entry(ref, repo, auth, changelog_path, resolve_backports, output):
     """Check changelog entry"""
-    branch = branch or util.get_branch()
+    ref = ref or util.get_branch()
 
     # Get the new version
     version = util.get_version()
@@ -207,8 +207,6 @@ def check_entry(branch, repo, auth, changelog_path, resolve_backports, output):
 
     repo = repo or util.get_repo()
 
-    import os
-    ref = os.environ['GITHUB_BASE_REF']
     raw_entry = get_version_entry(
         f"origin/{ref}",
         repo,
