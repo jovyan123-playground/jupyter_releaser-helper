@@ -259,7 +259,7 @@ def draft_changelog(version_spec, ref, branch, repo, auth, dry_run):
 @use_checkout_dir()
 def check_changelog(ref, branch, repo, auth, changelog_path, resolve_backports, output):
     """Check changelog entry"""
-    changelog.check_entry(ref, repo, auth, changelog_path, resolve_backports, output)
+    changelog.check_entry(branch, repo, auth, changelog_path, resolve_backports, output)
 
 
 @main.command()
