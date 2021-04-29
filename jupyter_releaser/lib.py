@@ -349,6 +349,7 @@ def parse_release_url(release_url):
 def publish_assets(
     dist_dir, npm_token, npm_cmd, twine_cmd, dry_run
 ):
+    """Publish release asset(s)"""
     if dry_run:
         # Start local pypi server with no auth, allowing overwrites,
         # in a temporary directory
@@ -391,14 +392,12 @@ def publish_assets(
 
 
 def publish_release(
-    auth, dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, release_url
+    auth, release_url, dry_run
 ):
     """Publish release asset(s) and finalize GitHub release"""
     util.log(f"Publishing {release_url} in with dry run: {dry_run}")
 
     match = parse_release_url(release_url)
-
-    publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run)
 
     # Take the release out of draft
     owner = os.environ['GITHUB_ACTOR']
