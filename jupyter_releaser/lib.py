@@ -348,7 +348,7 @@ def publish_assets(
 ):
     """Publish release asset(s)"""
     if use_checkout_dir:
-         if not osp.exists(util.CHECKOUT_NAME):
+        if not osp.exists(util.CHECKOUT_NAME):
             raise ValueError("Please run prep-git first")
         os.chdir(util.CHECKOUT_NAME)
 
