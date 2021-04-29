@@ -45,15 +45,5 @@ runs:
         # Draft Release
         python -m jupyter_releaser.actions.draft_release
 
-    - shell: bash
-      id: publish-release
-      run: |
-        set -eux
-
-        # Set up env variables
-        export release_url=${{ steps.draft-release.outputs.release_url }}
-        export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
-        export RH_DRY_RUN=true
-
-        # Publish Release
-        python -m jupyter_releaser.actions.publish_assets
+        # Publish Assets
+        jupyter-releaser publish-assets

@@ -125,6 +125,10 @@ version_cmd_options = [
     )
 ]
 
+# Call this git_options
+[click.option('--ref', envvar="RH_REF", help="The source reference"),
+click.option('--target', envvar="RH_TARGET", help="The target branch")]
+
 branch_options = [
     click.option("--branch", envvar="RH_BRANCH", help="The target branch"),
     click.option("--repo", envvar="RH_REPOSITORY", help="The git repo"),
