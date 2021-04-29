@@ -369,8 +369,6 @@ def publish_assets(
         os.environ["TWINE_PASSWORD"] = "bar"
         npm_cmd = "npm publish --dry-run"
 
-    match = parse_release_url(release_url)
-
     if npm_token:
         npm.handle_auth_token(npm_token)
 
