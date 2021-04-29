@@ -120,9 +120,9 @@ def get_version_entry(branch, repo, version, *, auth=None, resolve_backports=Fal
     return output
 
 
-def build_entry(ref, repo, auth, changelog_path, resolve_backports):
+def build_entry(branch, repo, auth, changelog_path, resolve_backports):
     """Build a python version entry"""
-    ref = ref or util.get_branch()
+    branch = branch or util.get_branch()
     repo = repo or util.get_repo()
 
     # Get the new version
@@ -139,12 +139,8 @@ def build_entry(ref, repo, auth, changelog_path, resolve_backports):
 
     # Get changelog entry
     # for a pull request, use the target branch
-    import os
-
-    ref = os.environ["GITHUB_BASE_REF"]
-
     entry = get_version_entry(
-        f"origin/{ref}",
+        f"origin/{branch}",
         repo,
         version,
         auth=auth,

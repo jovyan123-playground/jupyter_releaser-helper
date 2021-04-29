@@ -25,9 +25,9 @@ runs:
         export RH_DRY_RUN=true
         export RH_REF=${GITHUB_REF}
 
-        if [ ! -z ${GITHUB_HEAD_REF} ]; then
-          echo "Using GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
-          export RH_BRANCH=${GITHUB_HEAD_REF}
+        if [ ! -z ${GITHUB_BASE_REF} ]; then
+          echo "Using GITHUB_BASE_REF: ${GITHUB_BASE_REF}"
+          export RH_BRANCH=${GITHUB_BASE_REF}
         else
           # e.g refs/head/foo or refs/tag/bar
           echo "Using GITHUB_REF: ${GITHUB_REF}"

@@ -237,7 +237,7 @@ def bump_version(version_spec, version_cmd):
 @use_checkout_dir()
 def build_changelog(ref, branch, repo, auth, changelog_path, resolve_backports):
     """Build changelog entry"""
-    changelog.build_entry(ref, repo, auth, changelog_path, resolve_backports)
+    changelog.build_entry(branch, repo, auth, changelog_path, resolve_backports)
 
 
 @main.command()
