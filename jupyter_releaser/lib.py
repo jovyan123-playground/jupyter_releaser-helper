@@ -461,13 +461,11 @@ def prep_git(ref, branch, repo, auth, username, url, install=True):
     util.run("git fetch origin --tags")
 
     # Handle the ref
-    if ref.startswith("refs/heads/"):
-        ref_alias = branch
-    elif ref.startswith("refs/pull/"):
+    if ref.startswith("refs/pull/"):
         pull = ref[len("refs/pull/") :]
         ref_alias = f"refs/pull/{pull}"
     else:
-        ref_alias = ref
+        ref = None
 
     # Reuse existing branch if possible
     if ref:
@@ -475,6 +473,7 @@ def prep_git(ref, branch, repo, auth, username, url, install=True):
         util.run(f"git fetch origin {ref}")
         checkout_cmd = f"git checkout -B {branch} {ref_alias}"
     else:
+        util.run(f"git fetch origin {branch}")
         checkout_cmd = f"git checkout {branch}"
 
     if checkout_exists:
