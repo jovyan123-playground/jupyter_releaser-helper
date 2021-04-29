@@ -127,7 +127,7 @@ version_cmd_options = [
 
 
 branch_options = [
-    click.option('--ref', envvar="RH_REF", help="The source reference")
+    click.option("--ref", envvar="RH_REF", help="The source reference"),
     click.option("--branch", envvar="RH_BRANCH", help="The target branch"),
     click.option("--repo", envvar="RH_REPOSITORY", help="The git repo"),
 ]
@@ -445,15 +445,9 @@ def extract_release(auth, dist_dir, dry_run, release_url):
     envvar="TWINE_COMMAND",
     default="twine upload",
 )
-@click.option(
-    "--use-checkout-dir",
-    help="Use the checkout directory",
-    is_flag=True
-)
+@click.option("--use-checkout-dir", help="Use the checkout directory", is_flag=True)
 @add_options(dry_run_options)
-def publish_assets(
-    dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkout_dir
-):
+def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkout_dir):
     """Publish release asset(s)"""
     lib.publish_assets(
         dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkout_dir
@@ -463,13 +457,9 @@ def publish_assets(
 @main.command()
 @add_options(auth_options)
 @click.argument("release-url", nargs=1)
-def publish_release(
-    auth, release_url
-):
+def publish_release(auth, release_url):
     """Publish GitHub release"""
-    lib.publish_release(
-        auth, release_url
-    )
+    lib.publish_release(auth, release_url)
 
 
 @main.command()
