@@ -452,7 +452,7 @@ def publish_assets(
 ):
     """Publish release asset(s)"""
     lib.publish_assets(
-        auth, dist_dir, npm_token, npm_cmd, twine_cmd, dry_run
+        dist_dir, npm_token, npm_cmd, twine_cmd, dry_run
     )
 
 
