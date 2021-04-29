@@ -1,13 +1,13 @@
 name: Check Release
 on:
   push:
+    branches: ["master"]
+  pull_request:
     branches: ["*"]
 
 jobs:
   check_release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v2
