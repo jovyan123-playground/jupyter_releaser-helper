@@ -428,7 +428,6 @@ def extract_release(auth, dist_dir, dry_run, release_url):
 
 
 @main.command()
-@add_options(auth_options)
 @add_options(dist_dir_options)
 @click.option("--npm_token", help="A token for the npm release", envvar="NPM_TOKEN")
 @click.option(
@@ -445,7 +444,7 @@ def extract_release(auth, dist_dir, dry_run, release_url):
 )
 @add_options(dry_run_options)
 def publish_assets(
-    auth, dist_dir, npm_token, npm_cmd, twine_cmd, dry_run
+    dist_dir, npm_token, npm_cmd, twine_cmd, dry_run
 ):
     """Publish release asset(s)"""
     lib.publish_assets(
@@ -457,7 +456,7 @@ def publish_assets(
 @add_options(auth_options)
 @click.argument("release_url", nargs=1)
 def publish_release(
-    auth, dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, release_url
+    auth, release_url
 ):
     """Publish GitHub release"""
     lib.publish_release(
