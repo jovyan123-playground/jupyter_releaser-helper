@@ -394,7 +394,7 @@ def publish_assets(
 def publish_release(
     auth, release_url, dry_run
 ):
-    """Publish release asset(s) and finalize GitHub release"""
+    """Publish GitHub release"""
     util.log(f"Publishing {release_url} in with dry run: {dry_run}")
 
     match = parse_release_url(release_url)

@@ -444,13 +444,24 @@ def extract_release(auth, dist_dir, dry_run, release_url):
     default="twine upload",
 )
 @add_options(dry_run_options)
+def publish_assets(
+    auth, dist_dir, npm_token, npm_cmd, twine_cmd, dry_run
+):
+    """Publish release asset(s)"""
+    lib.publish_assets(
+        auth, dist_dir, npm_token, npm_cmd, twine_cmd, dry_run
+    )
+
+
+@main.command()
+@add_options(auth_options)
 @click.argument("release_url", nargs=1)
 def publish_release(
     auth, dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, release_url
 ):
-    """Publish release asset(s) and finalize GitHub release"""
+    """Publish GitHub release"""
     lib.publish_release(
-        auth, dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, release_url
+        auth, release_url
     )
 
 
