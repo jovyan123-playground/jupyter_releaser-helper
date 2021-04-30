@@ -205,11 +205,10 @@ def draft_release(
         return
 
     owner, repo_name = repo.split("/")
-    owner = os.environ["GITHUB_ACTOR"]
     gh = GhApi(owner=owner, repo=repo_name, token=auth)
 
     # Remove draft releases over a day old
-    if not bool(os.environ.get("GITHUB_ACTIONS")):
+    if bool(os.environ.get("GITHUB_ACTIONS")):
         for release in gh.repos.list_releases():
             if str(release.draft).lower() == "false":
                 continue
@@ -246,8 +245,7 @@ def delete_release(auth, release_url):
     if not match:
         raise ValueError(f"Release url is not valid: {release_url}")
 
-    owner = os.environ["GITHUB_ACTOR"]
-    gh = GhApi(owner=owner, repo=match["repo"], token=auth)
+    gh = GhApi(owner=match["owner"], repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
     for asset in release.assets:
         gh.repos.delete_release_asset(asset.id)
@@ -259,7 +257,6 @@ def extract_release(auth, dist_dir, dry_run, release_url):
     """Download and verify assets from a draft GitHub release"""
     match = parse_release_url(release_url)
     owner, repo = match["owner"], match["repo"]
-    owner = os.environ["GITHUB_ACTOR"]
     gh = GhApi(owner=owner, repo=repo, token=auth)
     release = util.release_for_url(gh, release_url)
     assets = release.assets
@@ -387,15 +384,14 @@ def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkou
         raise ValueError("No assets published, refusing to finalize release")
 
 
-def publish_release(auth, release_url, dry_run):
+def publish_release(auth, release_url):
     """Publish GitHub release"""
-    util.log(f"Publishing {release_url} in with dry run: {dry_run}")
+    util.log(f"Publishing {release_url}")
 
     match = parse_release_url(release_url)
 
     # Take the release out of draft
-    owner = os.environ["GITHUB_ACTOR"]
-    gh = GhApi(owner=owner, repo=match["repo"], token=auth)
+    gh = GhApi(owner=match["owner"], repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
 
     release = gh.repos.update_release(
@@ -404,7 +400,7 @@ def publish_release(auth, release_url, dry_run):
         release.target_commitish,
         release.name,
         release.body,
-        dry_run,
+        False,
         release.prerelease,
     )
 
@@ -456,6 +452,7 @@ def prep_git(ref, branch, repo, auth, username, url, install=True):
         util.run(f"git remote add origin {url}")
 
     branch = branch or util.get_default_branch()
+    ref = ref or ""
 
     # Make sure we have *all* tags
     util.run("git fetch origin --tags")
