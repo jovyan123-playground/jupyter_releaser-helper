@@ -45,7 +45,7 @@ When ready to make a release:
 4. When the run completes, review the changelog PR that was opened and make any desired edits.
 
 <p align="center">
-<img src="media/draft_changelog_next_step_.png" alt="Draft Changelog Next Step"
+<img src="media/draft_changelog_next_step.png" alt="Draft Changelog Next Step"
 	title="Draft Changelog Next Step" width="50%"/>
 </p>
 
@@ -67,7 +67,7 @@ When ready to make a release:
 9. When the workflow completes, go to the releases page in the target repository and verify that the new draft release is there with the correct changelog and dist files.
 
 <p align="center">
-<img src="media/draft_release_next_steps.png" alt="Draft Release Next Step"
+<img src="media/draft_release_next_step.png" alt="Draft Release Next Step"
 	title="Draft Release Workflow" width="50%"/>
 </p>
 
