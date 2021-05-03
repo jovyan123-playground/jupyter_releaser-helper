@@ -32,7 +32,8 @@ runs:
         export release_url=${{ inputs.release_url }}
 
         # Install Jupyter Releaser from git
-        pip install -q git+https://github.com/jupyter-server/jupyter_releaser.git@v1
+        #pip install -q git+https://github.com/jupyter-server/jupyter_releaser.git@v1
+        pip install -e .
 
         # Publish release
         python -m jupyter_releaser.actions.publish_release
