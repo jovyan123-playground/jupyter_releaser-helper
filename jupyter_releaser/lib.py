@@ -566,7 +566,7 @@ def forwardport_changelog(
     body = title
 
     pr = make_changelog_pr(
-        auth, ref, branch, repo, title, commit_message, body, dry_run=dry_run
+        auth, branch, repo, title, commit_message, body, dry_run=dry_run
     )
 
     # Clean up after ourselves
