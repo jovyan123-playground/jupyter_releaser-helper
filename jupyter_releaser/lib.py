@@ -10,8 +10,6 @@ import uuid
 from datetime import datetime
 from glob import glob
 from pathlib import Path
-from subprocess import PIPE
-from subprocess import Popen
 from tempfile import TemporaryDirectory
 
 import requests
