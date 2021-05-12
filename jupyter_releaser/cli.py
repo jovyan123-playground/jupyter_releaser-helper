@@ -176,6 +176,12 @@ changelog_options = (
     + changelog_path_options
     + [
         click.option(
+            "--since",
+            envvar="RH_SINCE",
+            default=None,
+            help="Use PRs with activity since this date or git reference",
+        ),
+        click.option(
             "--resolve-backports",
             envvar="RH_RESOLVE_BACKPORTS",
             default=True,
@@ -235,9 +241,9 @@ def bump_version(version_spec, version_cmd):
 @main.command()
 @add_options(changelog_options)
 @use_checkout_dir()
-def build_changelog(ref, branch, repo, auth, changelog_path, resolve_backports):
+def build_changelog(ref, branch, repo, auth, changelog_path, since, resolve_backports):
     """Build changelog entry"""
-    changelog.build_entry(branch, repo, auth, changelog_path, resolve_backports)
+    changelog.build_entry(branch, repo, auth, changelog_path, since, resolve_backports)
 
 
 @main.command()
@@ -257,9 +263,13 @@ def draft_changelog(version_spec, ref, branch, repo, auth, dry_run):
     "--output", envvar="RH_CHANGELOG_OUTPUT", help="The output file for changelog entry"
 )
 @use_checkout_dir()
-def check_changelog(ref, branch, repo, auth, changelog_path, resolve_backports, output):
+def check_changelog(
+    ref, branch, repo, auth, changelog_path, since, resolve_backports, output
+):
     """Check changelog entry"""
-    changelog.check_entry(branch, repo, auth, changelog_path, resolve_backports, output)
+    changelog.check_entry(
+        branch, repo, auth, changelog_path, since, resolve_backports, output
+    )
 
 
 @main.command()
