@@ -170,17 +170,21 @@ changelog_path_options = [
     ),
 ]
 
+since_options = [
+    click.option(
+        "--since",
+        envvar="RH_SINCE",
+        default=None,
+        help="Use PRs with activity since this date or git reference",
+    )
+]
+
 changelog_options = (
     branch_options
     + auth_options
     + changelog_path_options
+    + since_options
     + [
-        click.option(
-            "--since",
-            envvar="RH_SINCE",
-            default=None,
-            help="Use PRs with activity since this date or git reference",
-        ),
         click.option(
             "--resolve-backports",
             envvar="RH_RESOLVE_BACKPORTS",
@@ -249,12 +253,13 @@ def build_changelog(ref, branch, repo, auth, changelog_path, since, resolve_back
 @main.command()
 @add_options(version_spec_options)
 @add_options(branch_options)
+@add_options(since_options)
 @add_options(auth_options)
 @add_options(dry_run_options)
 @use_checkout_dir()
-def draft_changelog(version_spec, ref, branch, repo, auth, dry_run):
+def draft_changelog(version_spec, ref, branch, repo, since, auth, dry_run):
     """Create a changelog entry PR"""
-    lib.draft_changelog(version_spec, branch, repo, auth, dry_run)
+    lib.draft_changelog(version_spec, branch, repo, since, auth, dry_run)
 
 
 @main.command()
