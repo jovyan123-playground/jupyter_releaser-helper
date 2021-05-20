@@ -65,11 +65,11 @@ def get_version_entry(
     str
         A formatted changelog entry with markers
     """
-    tags = util.run(f"git --no-pager tag --sort=-creatordate --merged {branch}")
-    if not tags:  # pragma: no cover
-        raise ValueError(f"No tags found on branch {branch}")
+    if not since:
+        tags = util.run(f"git --no-pager tag --sort=-creatordate --merged {branch}")
+        if tags:
+            since = tags.splitlines()[0]
 
-    since = since or tags.splitlines()[0]
     branch = branch.split("/")[-1]
     util.log(f"Getting changes to {repo} since {since} on branch {branch}...")
 
@@ -167,7 +167,7 @@ def insert_entry(changelog, entry, version=None):
         changelog.index(START_MARKER) : changelog.index(END_MARKER) + len(END_MARKER)
     ]
 
-    if f"# {version}" in prev_entry:
+    if f"# {version}\n" in prev_entry:
         lines = new_entry.splitlines()
         old_lines = prev_entry.splitlines()
         for ind, line in enumerate(lines):
