@@ -364,6 +364,7 @@ def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkou
         npm.handle_npm_config(npm_token, dist_dir)
 
     found = False
+    multiple_npm = len(glob(f"{dist_dir}/*.tgz")) > 1
     for path in glob(f"{dist_dir}/*.*"):
         name = Path(path).name
         suffix = Path(path).suffix
@@ -371,11 +372,11 @@ def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkou
             util.run(f"{twine_cmd} {name}", cwd=dist_dir)
             found = True
         elif suffix == ".tgz":
-            # Ignore already published versions
+            # Ignore already published versions if there are multiple
             try:
                 util.run(f"{npm_cmd} {name}", cwd=dist_dir, quiet=True)
             except CalledProcessError as e:
-                if "EPUBLISHCONFLICT" not in e.stderr.decode("utf-8"):
+                if multiple_npm and "EPUBLISHCONFLICT" not in e.stderr.decode("utf-8"):
                     raise e
             found = True
         else:
