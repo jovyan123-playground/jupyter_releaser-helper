@@ -51,5 +51,6 @@ jobs:
         uses: ./.github/actions/check-release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-        env: RH_VERSION_SPEC = "0.1.0a0"
-          RH_POST_VERSION_SPEC = "0.2.0.dev0"
+        env:
+          RH_VERSION_SPEC: "0.1.0a0"
+          RH_POST_VERSION_SPEC: "0.2.0.dev0"
