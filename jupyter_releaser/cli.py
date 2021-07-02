@@ -446,7 +446,7 @@ def delete_release(auth, release_url):
 @add_options(dry_run_options)
 @add_options(npm_install_options)
 @click.argument("release-url", nargs=1)
-def extract_release(auth, dist_dir, dry_run, release_url):
+def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     """Download and verify assets from a draft GitHub release"""
     lib.extract_release(auth, dist_dir, dry_run, release_url, npm_install_options)
 
