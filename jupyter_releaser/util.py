@@ -185,7 +185,7 @@ def bump_version(version_spec, version_cmd=""):
             version_spec == f"{version.major}.{version.minor}.{version.micro + 1}"
         else:
             version_spec == "patch"
-    print("hello 2, version_spec")
+    print("hello 2", version_spec)
 
     # Bump the version
     run(f"{version_cmd} {version_spec}")
