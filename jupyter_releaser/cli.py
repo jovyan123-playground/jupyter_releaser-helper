@@ -114,7 +114,7 @@ version_spec_options = [
     click.option(
         "--version-spec",
         envvar="RH_VERSION_SPEC",
-        default="patch",
+        default="",
         help="The new version specifier",
     )
 ]
