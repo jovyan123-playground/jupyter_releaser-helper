@@ -180,6 +180,7 @@ def bump_version(version_spec, version_cmd=""):
     # Assign default values if not version spec was given
     print("hello", version_spec, version_cmd)
     if not version_spec.strip():
+        print("wtaf")
         if "tbump" in version_cmd:
             version = parse_version(get_version())
             version_spec == f"{version.major}.{version.minor}.{version.micro + 1}"
