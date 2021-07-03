@@ -178,12 +178,14 @@ def bump_version(version_spec, version_cmd=""):
         raise ValueError("Please specify a version bump command to run")
 
     # Assign default values if not version spec was given
+    print("hello", version_spec, version_cmd)
     if not version_spec:
         if "tbump" in version_cmd:
             version = parse_version(get_version())
             version_spec == f"{version.major}.{version.minor}.{version.micro + 1}"
         else:
             version_spec == "patch"
+    print("hello 2, version_spec")
 
     # Bump the version
     run(f"{version_cmd} {version_spec}")
