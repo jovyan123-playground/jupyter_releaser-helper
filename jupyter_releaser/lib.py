@@ -93,6 +93,9 @@ def draft_changelog(version_spec, branch, repo, since, auth, changelog_path, dry
     if f"v{version}" in tags.splitlines():
         raise ValueError(f"Tag v{version} already exists")
 
+    util.run("git status")
+    util.run("cat CHANGELOG.md")
+
     # Check out any unstaged files from version bump
     util.run("git checkout -- .")
 
