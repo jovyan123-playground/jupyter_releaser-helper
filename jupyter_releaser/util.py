@@ -185,10 +185,6 @@ def bump_version(version_spec, version_cmd=""):
         else:
             version_spec = "patch"
 
-    log(f"cwd: {os.getcwd()}")
-    log(str(os.listdir(".")))
-    run("cat pyproject.toml")
-
     # Bump the version
     run(f"{version_cmd} {version_spec}")
 
