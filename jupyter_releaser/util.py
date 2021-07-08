@@ -187,6 +187,7 @@ def bump_version(version_spec, version_cmd=""):
 
     log(f"cwd: {os.getcwd()}")
     log(str(os.listdir(".")))
+    run("cat pyproject.toml")
 
     # Bump the version
     run(f"{version_cmd} {version_spec}")
