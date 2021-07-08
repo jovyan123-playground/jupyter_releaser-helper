@@ -99,15 +99,13 @@ def draft_changelog(version_spec, branch, repo, since, auth, changelog_path, dry
         util.run("git checkout -- .")
     except CalledProcessError as e:
         util.log(str(e))
+        return
 
     current = changelog.extract_current(changelog_path)
     util.log(f"\n\nCurrent Changelog Entry:\n{current}")
 
     title = f"{changelog.PR_PREFIX} for {version} on {branch}"
-    try:
-        commit_message = f'git commit -a -m "{title}"'
-    except CalledProcessError as e:
-        util.log(str(e))
+    commit_message = f'git commit -a -m "{title}"'
     body = title
 
     # Check for multiple versions
