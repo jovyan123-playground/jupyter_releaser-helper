@@ -15,13 +15,13 @@ if check_release:
 
     # Extract the changelog
     changelog_location = os.environ.get("RH_CHANGELOG", "CHANGELOG.md")
-    changelog_text = Path(changelog_location).read_text(encoding="utf-8")
+    changelog_location = Path(CHECKOUT_NAME) / changelog_location
+    changelog_text = changelog_location.read_text(encoding="utf-8")
 
     # Remove the checkout
     shutil.rmtree(CHECKOUT_NAME)
 
-    # Re-install the parent dir
-    log("Parent dir is", os.getcwd())
+    # Re-install the parent dir in case it was overshadowed
     run("pip install -e .")
 
 run("jupyter-releaser prep-git")
