@@ -5,12 +5,13 @@ import shutil
 from pathlib import Path
 
 from jupyter_releaser.util import CHECKOUT_NAME
+from jupyter_releaser.util import log
 from jupyter_releaser.util import run
 
 check_release = os.environ.get("RH_IS_CHECK_RELEASE").lower() == "true"
 
 if check_release:
-    print("Handling Check Release action")
+    log("Handling Check Release action")
 
     # Extract the changelog
     changelog_location = os.environ.get("RH_CHANGELOG", "CHANGELOG.md")
@@ -20,7 +21,7 @@ if check_release:
     shutil.rmtree(CHECKOUT_NAME)
 
     # Re-install the parent dir
-    print("Parent dir is", os.getcwd())
+    log("Parent dir is", os.getcwd())
     run("pip install -e .")
 
 run("jupyter-releaser prep-git")
@@ -28,8 +29,8 @@ run("jupyter-releaser bump-version")
 
 if check_release:
     # Override the changelog
-    print("Patching the changelog")
-    print(changelog_text)
+    log("Patching the changelog")
+    log(changelog_text)
     Path(changelog_location).write_text(changelog_text)
 
 run("jupyter-releaser check-changelog")
