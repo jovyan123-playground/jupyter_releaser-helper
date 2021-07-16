@@ -28,6 +28,8 @@ run("jupyter-releaser bump-version")
 
 if check_release:
     # Override the changelog
+    print("Patching the changelog")
+    print(changelog_text)
     Path(changelog_location).write_text(changelog_text)
 
 run("jupyter-releaser check-changelog")
