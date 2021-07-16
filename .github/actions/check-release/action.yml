@@ -39,6 +39,8 @@ runs:
            pip install git+https://github.com/jupyter-server/jupyter_releaser.git
         fi
 
+        export RH_IS_CHECK_RELEASE=true
+
         # Draft Changelog
         python -m jupyter_releaser.actions.draft_changelog
 
