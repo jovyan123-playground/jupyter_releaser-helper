@@ -17,6 +17,11 @@ if check_release:
     # Remove the checkout
     shutil.rmtree(CHECKOUT_NAME)
 
+    # Re-install the parent dir if needed
+    repo_name = os.environ["RH_REPO_NAME"]
+    if repo_name == "jupyter_releaser":
+        run("pip install -e .")
+
 run("jupyter-releaser prep-git")
 run("jupyter-releaser bump-version")
 
