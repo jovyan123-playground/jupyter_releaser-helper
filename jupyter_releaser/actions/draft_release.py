@@ -10,6 +10,8 @@ from jupyter_releaser.util import run
 check_release = os.environ.get("RH_IS_CHECK_RELEASE").lower() == "true"
 
 if check_release:
+    print("Handling Check Release action")
+
     # Extract the changelog
     changelog_location = os.environ.get("RH_CHANGELOG", "CHANGELOG.md")
     changelog_text = Path(changelog_location).read_text(encoding="utf-8")
@@ -17,10 +19,9 @@ if check_release:
     # Remove the checkout
     shutil.rmtree(CHECKOUT_NAME)
 
-    # Re-install the parent dir if needed
-    repo_name = os.environ["RH_REPO_NAME"]
-    if repo_name == "jupyter_releaser":
-        run("pip install -e .")
+    # Re-install the parent dir
+    print("Parent dir is", os.getcwd())
+    run("pip install -e .")
 
 run("jupyter-releaser prep-git")
 run("jupyter-releaser bump-version")
