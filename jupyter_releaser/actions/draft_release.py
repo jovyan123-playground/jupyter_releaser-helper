@@ -12,11 +12,6 @@ from jupyter_releaser.util import run
 
 check_release = os.environ.get("RH_IS_CHECK_RELEASE", "").lower() == "true"
 
-# Capture the "since" argument in case we add tags before the second
-# "Check Changelog"
-os.environ.setdefault("RH_SINCE", get_latest_tag(os.environ["RH_BRANCH"]))
-
-
 if check_release:
     log("Handling Check Release action")
 
@@ -44,6 +39,11 @@ if check_release:
     Path(changelog_location).write_text(changelog_text)
 
 run("jupyter-releaser check-changelog")
+
+# Capture the "since" argument in case we add tags before the second
+# "Check Changelog"
+os.environ.setdefault("RH_SINCE", get_latest_tag(os.environ["RH_BRANCH"]))
+
 # Make sure npm comes before python in case it produces
 # files for the python package
 run("jupyter-releaser build-npm")
