@@ -6,10 +6,16 @@ from pathlib import Path
 from subprocess import CalledProcessError
 
 from jupyter_releaser.util import CHECKOUT_NAME
+from jupyter_releaser.util import get_latest_tag
 from jupyter_releaser.util import log
 from jupyter_releaser.util import run
 
 check_release = os.environ.get("RH_IS_CHECK_RELEASE", "").lower() == "true"
+
+# Capture the "since" argument in case we add tags before the second
+# "Check Changelog"
+os.environ.setdefault("RH_SINCE", get_latest_tag(os.environ["RH_BRANCH"]))
+
 
 if check_release:
     log("Handling Check Release action")
