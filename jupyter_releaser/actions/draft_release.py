@@ -42,7 +42,10 @@ run("jupyter-releaser check-changelog")
 
 # Capture the "since" argument in case we add tags before the second
 # "Check Changelog"
+curr_dir = os.getcwd()
+os.chdir(CHECKOUT_NAME)
 os.environ.setdefault("RH_SINCE", get_latest_tag(os.environ["RH_BRANCH"]))
+os.chdir(curr_dir)
 
 # Make sure npm comes before python in case it produces
 # files for the python package
