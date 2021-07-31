@@ -51,6 +51,8 @@ class ReleaseHelperGroup(click.Group):
         hooks = config.get("hooks", {})
         options = config.get("options", {})
         skip = config.get("skip", [])
+        if "--force" in ctx.args:
+            skip = []
 
         # Print a separation header
         util.log(f'\n\n{"-" * 50}')
@@ -119,7 +121,10 @@ class ReleaseHelperGroup(click.Group):
 
 
 @click.group(cls=ReleaseHelperGroup)
-def main():
+@click.option(
+    "--force", default=False, help="Force a command to run even when skipped by config"
+)
+def main(force):
     """Jupyter Releaser scripts"""
     pass
 

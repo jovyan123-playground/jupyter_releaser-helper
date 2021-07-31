@@ -28,4 +28,4 @@ runs:
         fi
 
         jupyter-releaser prep-git
-        jupyter-releaser check-links
+        jupyter-releaser check-links --force
