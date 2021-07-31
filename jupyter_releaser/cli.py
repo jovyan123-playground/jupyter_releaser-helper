@@ -53,6 +53,7 @@ class ReleaseHelperGroup(click.Group):
         skip = config.get("skip", [])
         if "--force" in ctx.args:
             skip = []
+            ctx.args.remove("--force")
 
         # Print a separation header
         util.log(f'\n\n{"-" * 50}')
