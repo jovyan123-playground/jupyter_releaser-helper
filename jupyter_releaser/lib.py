@@ -49,7 +49,7 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     os.makedirs(cache_dir, exist_ok=True)
     cmd = "pytest --noconftest --check-links --check-links-cache "
     cmd += f"--check-links-cache-expire-after {links_expire} "
-    cmd += "--disable-warnings "
+    cmd += "--disable-warnings --quiet "
     cmd += f"--check-links-cache-name {cache_dir}/check-release-links "
 
     ignored = []
