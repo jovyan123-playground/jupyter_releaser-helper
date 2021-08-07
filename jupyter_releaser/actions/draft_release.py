@@ -47,8 +47,7 @@ if check_release:
     # Override the changelog
     log("Patching the changelog")
     Path(changelog_location).write_text(changelog_text)
-    current_text = extract_current(changelog_location)
-    log(current_text)
+    log(extract_current(changelog_location))
 
 run("jupyter-releaser check-changelog")
 
