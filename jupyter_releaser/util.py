@@ -245,7 +245,7 @@ def actions_output(name, value):
 
 def get_latest_tag(branch):
     """Get the default 'since' value for a branch"""
-    tags = run(f"git --no-pager tag --sort=-creatordate --merged {branch}")
+    tags = run(f"git --no-pager tag --sort=-creatordate --merged {branch}", quiet=True)
     if tags:
         return tags.splitlines()[0]
 
