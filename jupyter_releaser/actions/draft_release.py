@@ -29,7 +29,7 @@ if check_release:
     try:
         run("jupyter-releaser --help")
     except CalledProcessError:
-        run("pip install -e .")
+        run("pip install -q -e .")
 
 run("jupyter-releaser prep-git")
 

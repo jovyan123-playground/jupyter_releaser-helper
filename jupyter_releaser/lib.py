@@ -500,7 +500,7 @@ def prep_git(ref, branch, repo, auth, username, url, install=True):
     if install:
         # install python package in editable mode with test deps
         if util.SETUP_PY.exists():
-            util.run('pip install -e ".[test]"')
+            util.run('pip install -q -e ".[test]"')
 
         # prefer yarn if yarn lock exists
         elif util.YARN_LOCK.exists():
