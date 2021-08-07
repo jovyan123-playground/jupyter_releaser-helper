@@ -5,10 +5,12 @@ import shutil
 from pathlib import Path
 from subprocess import CalledProcessError
 
+from jupyter_releaser.changelog import extract_current
 from jupyter_releaser.util import CHECKOUT_NAME
 from jupyter_releaser.util import get_latest_tag
 from jupyter_releaser.util import log
 from jupyter_releaser.util import run
+
 
 check_release = os.environ.get("RH_IS_CHECK_RELEASE", "").lower() == "true"
 
@@ -44,8 +46,9 @@ run("jupyter-releaser bump-version")
 if check_release:
     # Override the changelog
     log("Patching the changelog")
-    log(changelog_text)
     Path(changelog_location).write_text(changelog_text)
+    current_text = extract_current(changelog_location)
+    log(current_text)
 
 run("jupyter-releaser check-changelog")
 
