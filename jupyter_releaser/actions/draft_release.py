@@ -27,7 +27,7 @@ if check_release:
 
     # Re-install jupyter-releaser if it was overshadowed
     try:
-        run("jupyter-releaser --help")
+        run("jupyter-releaser --help", quiet=True, quiet_error=True)
     except CalledProcessError:
         run("pip install -q -e .")
 
