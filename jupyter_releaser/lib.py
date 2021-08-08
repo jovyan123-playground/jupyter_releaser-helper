@@ -266,13 +266,24 @@ def delete_release(auth, release_url):
     gh.repos.delete_release(release.id)
 
 
+# FAILED jupyter_releaser/tests/test_cli.py::test_extract_dist_py - assert 2 == 3
+# FAILED jupyter_releaser/tests/test_cli.py::test_extract_dist_npm - subprocess.CalledProcessError: Command 'git fetch
+
+# TODO: make sure we can run after-extract-release, after-forwardport-changelog, after-publish-assets, and after-publish-release in workflow
+# TODO: add a note saying that before-extract-release is not available
+
+
 def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     """Download and verify assets from a draft GitHub release"""
     match = parse_release_url(release_url)
     owner, repo = match["owner"], match["repo"]
     gh = GhApi(owner=owner, repo=repo, token=auth)
     release = util.release_for_url(gh, release_url)
+    branch = release.target_commitish
     assets = release.assets
+
+    # Prepare a git checkout
+    prep_git(None, branch, f"{owner}/{repo}", auth, None, None)
 
     # Clean the dist folder
     dist = Path(dist_dir)
@@ -303,7 +314,6 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     if dry_run:
         return
 
-    branch = release.target_commitish
     tag_name = release.tag_name
 
     sha = None
@@ -313,17 +323,10 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     if sha is None:
         raise ValueError("Could not find tag")
 
-    # Run a git checkout
-    # Fetch the branch
-    # Get the commmit message for the branch
+    # Get the commmit message for the tag
     commit_message = ""
-    with TemporaryDirectory() as td:
-        url = gh.repos.get().html_url
-        util.run(f"git clone {url} local", cwd=td)
-        checkout = osp.join(td, "local")
-        if not osp.exists(url):
-            util.run(f"git fetch origin {branch}", cwd=checkout)
-        commit_message = util.run(f"git log --format=%B -n 1 {sha}", cwd=checkout)
+    checkout = osp.join(os.getcwd(), util.CHECKOUT_NAME)
+    commit_message = util.run(f"git log --format=%B -n 1 {sha}", cwd=checkout)
 
     for asset in assets:
         # Check the sha against the published sha
