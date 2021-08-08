@@ -35,7 +35,7 @@ def bump_version(version_spec, version_cmd):
 
     # Bail if tag already exists
     tag_name = f"v{version}"
-    if tag_name in util.run("git --no-pager tag").splitlines():
+    if tag_name in util.run("git --no-pager tag", quiet=True).splitlines():
         msg = f"Tag {tag_name} already exists!"
         msg += " To delete run: `git push --delete origin {tag_name}`"
         raise ValueError(msg)
@@ -49,6 +49,7 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     os.makedirs(cache_dir, exist_ok=True)
     cmd = "pytest --noconftest --check-links --check-links-cache "
     cmd += f"--check-links-cache-expire-after {links_expire} "
+    cmd += "--disable-warnings --quiet "
     cmd += f"--check-links-cache-name {cache_dir}/check-release-links "
 
     ignored = []
@@ -89,7 +90,7 @@ def draft_changelog(version_spec, branch, repo, since, auth, changelog_path, dry
     branch = branch or util.get_branch()
     version = util.get_version()
 
-    tags = util.run("git --no-pager tag")
+    tags = util.run("git --no-pager tag", quiet=True)
     if f"v{version}" in tags.splitlines():
         raise ValueError(f"Tag v{version} already exists")
 
@@ -265,13 +266,24 @@ def delete_release(auth, release_url):
     gh.repos.delete_release(release.id)
 
 
+# FAILED jupyter_releaser/tests/test_cli.py::test_extract_dist_py - assert 2 == 3
+# FAILED jupyter_releaser/tests/test_cli.py::test_extract_dist_npm - subprocess.CalledProcessError: Command 'git fetch
+
+# TODO: make sure we can run after-extract-release, after-forwardport-changelog, after-publish-assets, and after-publish-release in workflow
+# TODO: add a note saying that before-extract-release is not available
+
+
 def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     """Download and verify assets from a draft GitHub release"""
     match = parse_release_url(release_url)
     owner, repo = match["owner"], match["repo"]
     gh = GhApi(owner=owner, repo=repo, token=auth)
     release = util.release_for_url(gh, release_url)
+    branch = release.target_commitish
     assets = release.assets
+
+    # Prepare a git checkout
+    prep_git(None, branch, f"{owner}/{repo}", auth, None, None)
 
     # Clean the dist folder
     dist = Path(dist_dir)
@@ -302,7 +314,6 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     if dry_run:
         return
 
-    branch = release.target_commitish
     tag_name = release.tag_name
 
     sha = None
@@ -312,17 +323,10 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     if sha is None:
         raise ValueError("Could not find tag")
 
-    # Run a git checkout
-    # Fetch the branch
-    # Get the commmit message for the branch
+    # Get the commmit message for the tag
     commit_message = ""
-    with TemporaryDirectory() as td:
-        url = gh.repos.get().html_url
-        util.run(f"git clone {url} local", cwd=td)
-        checkout = osp.join(td, "local")
-        if not osp.exists(url):
-            util.run(f"git fetch origin {branch}", cwd=checkout)
-        commit_message = util.run(f"git log --format=%B -n 1 {sha}", cwd=checkout)
+    checkout = osp.join(os.getcwd(), util.CHECKOUT_NAME)
+    commit_message = util.run(f"git log --format=%B -n 1 {sha}", cwd=checkout)
 
     for asset in assets:
         # Check the sha against the published sha
@@ -470,7 +474,7 @@ def prep_git(ref, branch, repo, auth, username, url, install=True):
     ref = ref or ""
 
     # Make sure we have *all* tags
-    util.run("git fetch origin --tags --force")
+    util.run("git fetch origin --tags --force --quiet")
 
     # Handle the ref
     if ref.startswith("refs/pull/"):
@@ -500,7 +504,7 @@ def prep_git(ref, branch, repo, auth, username, url, install=True):
     if install:
         # install python package in editable mode with test deps
         if util.SETUP_PY.exists():
-            util.run('pip install -e ".[test]"')
+            util.run('pip install -q -e ".[test]"')
 
         # prefer yarn if yarn lock exists
         elif util.YARN_LOCK.exists():
@@ -535,7 +539,7 @@ def forwardport_changelog(
     os.chdir(util.CHECKOUT_NAME)
 
     # Bail if the tag has been merged to the branch
-    tags = util.run(f"git --no-pager tag --merged {branch}")
+    tags = util.run(f"git --no-pager tag --merged {branch}", quiet=True)
     if tag in tags.splitlines():
         util.log(f"Skipping since tag is already merged into {branch}")
         return
