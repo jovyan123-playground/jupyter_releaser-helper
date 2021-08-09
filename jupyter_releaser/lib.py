@@ -265,9 +265,6 @@ def delete_release(auth, release_url):
     gh.repos.delete_release(release.id)
 
 
-# FAILED jupyter_releaser/tests/test_cli.py::test_extract_dist_py - assert 2 == 3
-# FAILED jupyter_releaser/tests/test_cli.py::test_extract_dist_npm - subprocess.CalledProcessError: Command 'git fetch
-
 # TODO: make sure we can run after-extract-release, after-forwardport-changelog, after-publish-assets, and after-publish-release in workflow
 # TODO: add a note saying that before-extract-release is not available
 

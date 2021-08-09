@@ -440,7 +440,7 @@ def test_extract_dist_py(py_package, runner, mocker, open_mock, tmp_path, git_pr
     ]
 
     runner(["extract-release", HTML_URL])
-    assert len(open_mock.mock_calls) == 3
+    assert len(open_mock.mock_calls) == 2
     assert len(get_mock.mock_calls) == len(dist_names) == 2
 
 
@@ -464,7 +464,7 @@ def test_extract_dist_npm(npm_dist, runner, mocker, open_mock, tmp_path):
     releases = [
         dict(
             tag_name=tag_name,
-            target_commitish="main",
+            target_commitish="foo",
             assets=[dict(name=dist_name, url=dist_name) for dist_name in dist_names],
         )
     ]
@@ -477,7 +477,7 @@ def test_extract_dist_npm(npm_dist, runner, mocker, open_mock, tmp_path):
     ]
 
     runner(["extract-release", HTML_URL])
-    assert len(open_mock.mock_calls) == 3
+    assert len(open_mock.mock_calls) == 2
     assert len(get_mock.mock_calls) == len(dist_names) == 3
 
 

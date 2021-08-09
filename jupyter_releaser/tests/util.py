@@ -11,10 +11,14 @@ from jupyter_releaser.util import run
 
 VERSION_SPEC = "1.0.1"
 
-TOML_CONFIG = """
+LOG_CODE = 'python -c \'fid = open("log.txt", "a"); fid.write("TEXT\n")\''
+
+TOML_CONFIG = f"""
 [hooks]
 before-build-python = "python setup.py --version"
 after-build-python = ["python setup.py --version", "python setup.py --name"]
+after-extract-release = ${LOG_CODE.replace('TEXT', 'after-extract-release')}
+before-publish-assets = ${LOG_CODE.replace('TEXT', 'before-publish-assets')}
 
 [options]
 dist_dir = "foo"
