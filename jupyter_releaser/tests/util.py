@@ -12,8 +12,6 @@ from jupyter_releaser.util import run
 
 VERSION_SPEC = "1.0.1"
 
-LOG_CODE = 'python -c \'fid = open("log.txt", "a"); fid.writeline("TEXT")\''
-
 TOML_CONFIG = """
 [hooks]
 """
