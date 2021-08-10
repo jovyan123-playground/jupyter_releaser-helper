@@ -76,11 +76,11 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     for f in files:
         file_cmd = cmd + f' "{f}"'
         try:
-            util.run(file_cmd)
+            util.run(file_cmd, shell=False)
         except Exception as e:
             # Return code 5 means no tests were run (no links found)
             if e.returncode != 5:
-                util.run(file_cmd + " --lf")
+                util.run(file_cmd + " --lf", shell=False)
 
 
 def draft_changelog(version_spec, branch, repo, since, auth, changelog_path, dry_run):
