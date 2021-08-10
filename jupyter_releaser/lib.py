@@ -265,8 +265,8 @@ def delete_release(auth, release_url):
     gh.repos.delete_release(release.id)
 
 
-# TODO: make sure we can run after-extract-release, after-forwardport-changelog, after-publish-assets, and after-publish-release in workflow
 # TODO: add a note saying that before-extract-release is not available
+# Add the log handling to each of the lifecycle methods
 
 
 def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
@@ -350,13 +350,8 @@ def parse_release_url(release_url):
     return match
 
 
-def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkout_dir):
+def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run):
     """Publish release asset(s)"""
-    if use_checkout_dir:
-        if not osp.exists(util.CHECKOUT_NAME):
-            raise ValueError("Please run prep-git first")
-        os.chdir(util.CHECKOUT_NAME)
-
     if dry_run:
         # Start local pypi server with no auth, allowing overwrites,
         # in a temporary directory
@@ -423,14 +418,14 @@ def publish_release(auth, release_url):
     util.actions_output("release_url", release.html_url)
 
 
-def prep_git(ref, branch, repo, auth, username, url, install=True):
+def prep_git(ref, branch, repo, auth, username, url):
     """Set up git"""
     repo = repo or util.get_repo()
 
     user_name = ""
     try:
         user_name = util.run("git config --global user.email")
-    except Exception as e:
+    except Exception:
         pass
 
     if not user_name:
@@ -497,20 +492,19 @@ def prep_git(ref, branch, repo, auth, username, url, install=True):
         util.run(checkout_cmd)
 
     # Install the package
-    if install:
-        # install python package in editable mode with test deps
-        if util.SETUP_PY.exists():
-            util.run('pip install -e ".[test]"')
+    # install python package in editable mode with test deps
+    if util.SETUP_PY.exists():
+        util.run('pip install -e ".[test]"')
 
-        # prefer yarn if yarn lock exists
-        elif util.YARN_LOCK.exists():
-            if not shutil.which("yarn"):
-                util.run("npm install -g yarn")
-            util.run("yarn")
+    # prefer yarn if yarn lock exists
+    elif util.YARN_LOCK.exists():
+        if not shutil.which("yarn"):
+            util.run("npm install -g yarn")
+        util.run("yarn")
 
-        # npm install otherwise
-        elif util.PACKAGE_JSON.exists():
-            util.run("npm install")
+    # npm install otherwise
+    elif util.PACKAGE_JSON.exists():
+        util.run("npm install")
 
     os.chdir(orig_dir)
 
@@ -531,8 +525,12 @@ def forwardport_changelog(
 
     # We want to target the main branch
     orig_dir = os.getcwd()
-    branch = prep_git(None, None, repo, auth, username, git_url, install=False)
+
+    # switch to main branch here
+    default_branch = util.get_default_branch()
     os.chdir(util.CHECKOUT_NAME)
+    util.run(f"git fetch origin {default_branch}")
+    util.run(f"git checkout {default_branch}")
 
     # Bail if the tag has been merged to the branch
     tags = util.run(f"git --no-pager tag --merged {branch}")
@@ -594,4 +592,4 @@ def forwardport_changelog(
 
     # Clean up after ourselves
     os.chdir(orig_dir)
-    shutil.rmtree(util.CHECKOUT_NAME)
+    util.run(f"git checkout {branch}")
