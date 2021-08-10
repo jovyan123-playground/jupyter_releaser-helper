@@ -253,11 +253,10 @@ def test_draft_changelog_full(py_package, mocker, runner, open_mock, git_prep):
 def test_draft_changelog_skip(py_package, mocker, runner, open_mock, git_prep):
     mock_changelog_entry(py_package, runner, mocker)
 
-    pyproject_path = Path(util.CHECKOUT_NAME) / "pyproject.toml"
-    pyproject = util.toml.loads(pyproject_path.read_text(encoding="utf-8"))
-    pyproject["tool"] = {"jupyter-releaser": dict()}
-    pyproject["tool"]["jupyter-releaser"]["skip"] = ["draft-changelog"]
-    pyproject_path.write_text(util.toml.dumps(pyproject), encoding="utf-8")
+    config_path = Path(util.CHECKOUT_NAME) / util.JUPYTER_RELEASER_CONFIG
+    config = util.toml.loads(config_path.read_text(encoding="utf-8"))
+    config["skip"] = ["draft-changelog"]
+    config_path.write_text(util.toml.dumps(config), encoding="utf-8")
 
     runner(["draft-changelog", "--version-spec", VERSION_SPEC])
     open_mock.assert_not_called()
@@ -762,18 +761,13 @@ def test_forwardport_changelog_no_new(npm_package, runner, mocker, open_mock, gi
     util.run(f"git tag v{VERSION_SPEC}", cwd=util.CHECKOUT_NAME)
 
     # Run the forwardport workflow against default branch
-    os.chdir(util.CHECKOUT_NAME)
-    url = os.getcwd()
-    runner(["forwardport-changelog", HTML_URL, "--git-url", url])
+    runner(["forwardport-changelog", HTML_URL])
 
-    assert len(open_mock.mock_calls) == 1
+    assert len(open_mock.mock_calls) == 2
 
-    expected = """
-<!-- <START NEW CHANGELOG ENTRY> -->
-
-## 1.0.1
-"""
-    assert expected in Path("CHANGELOG.md").read_text(encoding="utf-8")
+    log = get_log()
+    assert "before-forwardport-changelog" in log
+    assert "after-forwardport-changelog" in log
 
 
 def test_forwardport_changelog_has_new(
@@ -807,7 +801,7 @@ def test_forwardport_changelog_has_new(
     # Run the forwardport workflow against default branch
     url = osp.abspath(npm_package)
     os.chdir(npm_package)
-    runner(["forwardport-changelog", HTML_URL, "--git-url", url, "--branch", current])
+    runner(["forwardport-changelog", HTML_URL, "--branch", current])
 
     assert len(open_mock.call_args) == 2
     util.run(f"git checkout {current}", cwd=npm_package)

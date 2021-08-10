@@ -511,7 +511,6 @@ def publish_release(auth, release_url):
 @add_options(username_options)
 @add_options(changelog_path_options)
 @add_options(dry_run_options)
-@add_options(git_url_options)
 @click.argument("release-url")
 @use_checkout_dir()
 def forwardport_changelog(

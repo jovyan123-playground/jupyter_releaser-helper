@@ -265,10 +265,6 @@ def delete_release(auth, release_url):
     gh.repos.delete_release(release.id)
 
 
-# TODO: add a note saying that before-extract-release is not available
-# Add the log handling to each of the lifecycle methods
-
-
 def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     """Download and verify assets from a draft GitHub release"""
     match = parse_release_url(release_url)
@@ -512,7 +508,7 @@ def prep_git(ref, branch, repo, auth, username, url):
 
 
 def forwardport_changelog(
-    auth, ref, branch, repo, username, changelog_path, dry_run, git_url, release_url
+    auth, ref, branch, repo, username, changelog_path, dry_run, release_url
 ):
     """Forwardport Changelog Entries to the Default Branch"""
     # Set up the git repo with the branch
@@ -520,17 +516,14 @@ def forwardport_changelog(
     gh = GhApi(owner=match["owner"], repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
     tag = release.tag_name
+    source_branch = release.target_commitish
 
     repo = f'{match["owner"]}/{match["repo"]}'
 
-    # We want to target the main branch
-    orig_dir = os.getcwd()
-
     # switch to main branch here
-    default_branch = util.get_default_branch()
-    os.chdir(util.CHECKOUT_NAME)
-    util.run(f"git fetch origin {default_branch}")
-    util.run(f"git checkout {default_branch}")
+    branch = branch or util.get_default_branch()
+    util.run(f"git fetch origin {branch}")
+    util.run(f"git checkout {branch}")
 
     # Bail if the tag has been merged to the branch
     tags = util.run(f"git --no-pager tag --merged {branch}")
@@ -591,5 +584,4 @@ def forwardport_changelog(
     )
 
     # Clean up after ourselves
-    os.chdir(orig_dir)
-    util.run(f"git checkout {branch}")
+    util.run(f"git checkout {source_branch}")
