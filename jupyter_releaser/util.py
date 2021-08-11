@@ -257,7 +257,7 @@ def retry(cmd, **kwargs):
     """Run a command with retries"""
     attempt = 0
     while attempt < 3:
-        time.sleep(attempt * 1000)
+        time.sleep(attempt)
         try:
             run(cmd, **kwargs)
         except Exception:
