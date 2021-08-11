@@ -9,7 +9,6 @@ from datetime import datetime
 from glob import glob
 from pathlib import Path
 from subprocess import CalledProcessError
-from tempfile import TemporaryDirectory
 
 import requests
 from ghapi.core import GhApi
@@ -278,6 +277,9 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     # Prepare a git checkout
     prep_git(None, branch, f"{owner}/{repo}", auth, None, None)
 
+    orig_dir = os.getcwd()
+    os.chdir(util.CHECKOUT_NAME)
+
     # Clean the dist folder
     dist = Path(dist_dir)
     if dist.exists():
@@ -337,6 +339,8 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
         if not valid:  # pragma: no cover
             raise ValueError(f"Invalid file {asset.name}")
 
+    os.chdir(orig_dir)
+
 
 def parse_release_url(release_url):
     """Parse a release url into a regex match"""
@@ -354,7 +358,7 @@ def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run):
         # in a temporary directory
         if len(glob(f"{dist_dir}/*.whl")):
             python.start_local_pypi()
-            twine_cmd = "twine upload --repository-url=http://localhost:8081"
+            twine_cmd = "twine upload --repository-url=http://0.0.0.0:8081"
             os.environ["TWINE_USERNAME"] = "foo"
             os.environ["TWINE_PASSWORD"] = "bar"
         npm_cmd = "npm publish --dry-run"
@@ -487,6 +491,11 @@ def prep_git(ref, branch, repo, auth, username, url):
             util.run(checkout_cmd)
     else:
         util.run(checkout_cmd)
+
+    # Check for detached head state, create branch if needed
+    output = util.run("git symbolic-ref -q HEAD")
+    if not output:
+        util.run(f"git switch -c {branch}")
 
     # Install the package
     # install python package in editable mode with test deps
