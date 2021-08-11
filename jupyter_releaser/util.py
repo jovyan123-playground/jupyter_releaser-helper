@@ -260,6 +260,7 @@ def retry(cmd, **kwargs):
         time.sleep(attempt)
         try:
             run(cmd, **kwargs)
+            return
         except Exception:
             attempt += 1
 
