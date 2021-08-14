@@ -127,7 +127,7 @@ jobs:
           INPUT_SINCE: v0.3.0
           INPUT_UNTIL: v0.4.0
         run: |
-          python -m jupyter_releaser.actions.generate-changelog ${{ TARGET }}
+          python -m jupyter_releaser.actions.generate-changelog ${{ env.TARGET }}
           cat changelog.md
       - name: Coverage
         run: |
