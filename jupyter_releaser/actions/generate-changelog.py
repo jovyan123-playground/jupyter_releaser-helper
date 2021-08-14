@@ -15,7 +15,7 @@ print("target:", target)
 print("branch:", branch)
 print("convert to rst:", convert_to_rst)
 
-output = get_version_entry(branch, target, since=since, until=until)
+output = get_version_entry(branch, target, "current", since=since, until=until)
 if convert_to_rst.lower() == "true":
     from pypandoc import convert_text
 
