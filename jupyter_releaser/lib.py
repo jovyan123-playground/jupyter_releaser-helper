@@ -477,10 +477,12 @@ def prep_git(ref, branch, repo, auth, username, url):
     # Reuse existing branch if possible
     if ref:
         util.run(f"git fetch origin +{ref}:{ref_alias}")
-        util.run(f"git fetch origin {ref}")
+        util.run(f'git remote set-branches --add origin "{ref}"')
+        util.run(f"git fetch origin --depth 1 {ref}")
         checkout_cmd = f"git checkout -B {branch} {ref_alias}"
     else:
-        util.run(f"git fetch origin {branch}")
+        util.run(f'git remote set-branches --add origin "{branch}"')
+        util.run(f"git fetch origin --depth 1 {branch}")
         checkout_cmd = f"git checkout {branch}"
 
     if checkout_exists:
