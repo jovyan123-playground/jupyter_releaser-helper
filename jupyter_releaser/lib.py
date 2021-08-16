@@ -137,7 +137,8 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
         dirty = util.run("git --no-pager diff --stat") != ""
         if dirty:
             util.run("git stash")
-        util.run(f"git fetch origin {branch}")
+        util.run(f"git remote set-branches --add origin '{branch}'")
+        util.run(f"git fetch origin --depth 1 {branch}")
         util.run(f"git checkout -b {pr_branch} origin/{branch}")
         if dirty:
             util.run("git stash apply")
@@ -477,10 +478,12 @@ def prep_git(ref, branch, repo, auth, username, url):
     # Reuse existing branch if possible
     if ref:
         util.run(f"git fetch origin +{ref}:{ref_alias}")
-        util.run(f"git fetch origin {ref}")
+        util.run(f'git remote set-branches --add origin "{ref}"')
+        util.run(f"git fetch origin --depth 1 {ref}")
         checkout_cmd = f"git checkout -B {branch} {ref_alias}"
     else:
-        util.run(f"git fetch origin {branch}")
+        util.run(f'git remote set-branches --add origin "{branch}"')
+        util.run(f"git fetch origin --depth 1 {branch}")
         checkout_cmd = f"git checkout {branch}"
 
     if checkout_exists:
@@ -532,7 +535,8 @@ def forwardport_changelog(
 
     # switch to main branch here
     branch = branch or util.get_default_branch()
-    util.run(f"git fetch origin {branch}")
+    util.run(f"git remote set-branches --add origin '{branch}'")
+    util.run(f"git fetch origin --depth 1 {branch}")
     util.run(f"git checkout {branch}")
 
     # Bail if the tag has been merged to the branch
