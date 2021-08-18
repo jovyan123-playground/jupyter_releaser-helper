@@ -69,7 +69,9 @@ def get_version_entry(
     """
 
     if not since:
-        tags = util.run(f"git --no-pager tag --sort=-creatordate --merged {branch}", quiet=True)
+        tags = util.run(
+            f"git --no-pager tag --sort=-creatordate --merged {branch}", quiet=True
+        )
         if tags:
             since = tags.splitlines()[0]
 
