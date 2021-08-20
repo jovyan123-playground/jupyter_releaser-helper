@@ -180,7 +180,7 @@ def tag_release(dist_dir, release_message, tag_message, no_git_tag_workspace):
     # Create the annotated release tag
     tag_name = f"v{version}"
     tag_message = tag_message.format(tag_name=tag_name)
-    util.run(f'git tag {tag_name} -a -m "{tag_message}')
+    util.run(f'git tag {tag_name} -a -m "{tag_message}"')
 
     # Create release tags for workspace packages if given
     if not no_git_tag_workspace:
