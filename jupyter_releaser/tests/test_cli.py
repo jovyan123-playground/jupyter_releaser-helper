@@ -159,11 +159,14 @@ npm-cmd: RH_NPM_COMMAND
 npm-install-options: RH_NPM_INSTALL_OPTIONS
 npm-token: NPM_TOKEN
 output: RH_CHANGELOG_OUTPUT
+post-version-message: RH_POST_VERSION_MESSAGE
 post-version-spec: RH_POST_VERSION_SPEC
 ref: RH_REF
+release-message: RH_RELEASE_MESSAGE
 repo: RH_REPOSITORY
 resolve-backports: RH_RESOLVE_BACKPORTS
 since: RH_SINCE
+tag-message: RH_TAG_MESSAGE
 twine-cmd: TWINE_COMMAND
 username: GITHUB_ACTOR
 version-cmd: RH_VERSION_COMMAND
