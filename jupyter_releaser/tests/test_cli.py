@@ -444,7 +444,15 @@ def test_tag_release(py_package, runner, build_mock, git_prep):
     # Create the dist files
     util.run("python -m build .", cwd=util.CHECKOUT_NAME)
     # Tag the release
-    runner(["tag-release"])
+    runner(
+        [
+            "tag-release",
+            "--release-message",
+            "hi {version}",
+            "--tag-message",
+            "no thanks",
+        ]
+    )
 
     log = get_log()
     assert "before-tag-release" in log
@@ -453,7 +461,16 @@ def test_tag_release(py_package, runner, build_mock, git_prep):
 
 def test_draft_release_dry_run(py_dist, mocker, runner, open_mock, git_prep):
     # Publish the release - dry run
-    runner(["draft-release", "--dry-run", "--post-version-spec", "1.1.0.dev0"])
+    runner(
+        [
+            "draft-release",
+            "--dry-run",
+            "--post-version-spec",
+            "1.1.0.dev0",
+            "--post-version-message",
+            "haha",
+        ]
+    )
     open_mock.assert_not_called()
 
     log = get_log()
