@@ -53,7 +53,8 @@ def test_get_changelog_version_entry(py_package, mocker):
     mocked_gen = mocker.patch("jupyter_releaser.changelog.generate_activity_md")
     mocked_gen.return_value = testutil.CHANGELOG_ENTRY
     branch = "foo"
-    resp = changelog.get_version_entry(branch, "bar/baz", version)
+    ref = "origin/bar/baz"
+    resp = changelog.get_version_entry(ref, branch, "bar/baz", version)
     mocked_gen.assert_called_with(
         "bar/baz",
         since=None,
@@ -69,7 +70,7 @@ def test_get_changelog_version_entry(py_package, mocker):
 
     mocked_gen.return_value = testutil.CHANGELOG_ENTRY
     resp = changelog.get_version_entry(
-        branch, "bar/baz", version, resolve_backports=True, auth="bizz"
+        ref, branch, "bar/baz", version, resolve_backports=True, auth="bizz"
     )
     mocked_gen.assert_called_with(
         "bar/baz",
