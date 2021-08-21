@@ -278,7 +278,9 @@ def bump_version(version_spec, version_cmd):
 @use_checkout_dir()
 def build_changelog(ref, branch, repo, auth, changelog_path, since, resolve_backports):
     """Build changelog entry"""
-    changelog.build_entry(branch, repo, auth, changelog_path, since, resolve_backports)
+    changelog.build_entry(
+        ref, branch, repo, auth, changelog_path, since, resolve_backports
+    )
 
 
 @main.command()
@@ -289,9 +291,7 @@ def build_changelog(ref, branch, repo, auth, changelog_path, since, resolve_back
 @add_options(changelog_path_options)
 @add_options(dry_run_options)
 @use_checkout_dir()
-def draft_changelog(
-    version_spec, ref, branch, repo, since, auth, changelog_path, dry_run
-):
+def draft_changelog(version_spec, branch, repo, since, auth, changelog_path, dry_run):
     """Create a changelog entry PR"""
     lib.draft_changelog(
         version_spec, branch, repo, since, auth, changelog_path, dry_run
@@ -309,7 +309,7 @@ def check_changelog(
 ):
     """Check changelog entry"""
     changelog.check_entry(
-        branch, repo, auth, changelog_path, since, resolve_backports, output
+        ref, branch, repo, auth, changelog_path, since, resolve_backports, output
     )
 
 
