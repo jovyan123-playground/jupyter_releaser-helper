@@ -84,6 +84,7 @@ def get_version_entry(
     md = generate_activity_md(
         repo,
         since=since,
+        until=until,
         kind="pr",
         heading_level=2,
         auth=auth,
