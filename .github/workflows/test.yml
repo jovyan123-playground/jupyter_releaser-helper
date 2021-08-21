@@ -132,8 +132,8 @@ jobs:
           python -m jupyter_releaser.actions.generate-changelog
           cat CHANGELOG_ENTRY.md
           # Check for version entry in between the two versions and one outside
-          cat CHANGELOG_ENTRY.md | grep -q "#95" ||  exit 1
-          cat CHANGELOG_ENTRY.md | grep -q "#100" && exit 1
+          cat CHANGELOG_ENTRY.md | grep -q "#95"
+          cat CHANGELOG_ENTRY.md | grep -q "compare/0.3.3...v0.4.0"
       - name: Coverage
         run: |
           codecov
