@@ -29,4 +29,4 @@ if convert_to_rst.lower() == "true":
 print("\n\n------------------------------")
 print(output, "------------------------------\n\n")
 os.chdir(orig_dir)
-Path("changelog.md").write_text(output, encoding="utf-8")
+Path("CHANGELOG_ENTRY.md").write_text(output, encoding="utf-8")

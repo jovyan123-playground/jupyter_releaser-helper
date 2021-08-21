@@ -56,8 +56,8 @@ jobs:
           export INPUT_UNTIL=${{ github.event.inputs.until }}
           export INPUT_CONVERT_TO_RST=${{ github.event.inputs.convert_to_rst }}
           python -m jupyter_releaser.actions.generate-changelog
-          cat changelog.md
+          cat CHANGELOG_ENTRY.md
       - uses: actions/upload-artifact@v2
         with:
           name: changelog
-          path: changelog.md
+          path: CHANGELOG_ENTRY.md
