@@ -51,6 +51,7 @@ jobs:
         run: |
           export RH_BRANCH=${{ github.event.inputs.branch }}
           export RH_SINCE=${{ github.event.inputs.since }}
+          export RH_REF=refs/heads/${RH_BRANCH}
           export RH_REPOSITORY=${{ github.event.inputs.target }}
           export INPUT_UNTIL=${{ github.event.inputs.until }}
           export INPUT_CONVERT_TO_RST=${{ github.event.inputs.convert_to_rst }}

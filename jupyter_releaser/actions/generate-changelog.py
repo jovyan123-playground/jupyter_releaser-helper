@@ -7,6 +7,7 @@ from jupyter_releaser.util import run
 
 target = os.environ.get("RH_REPOSITORY")
 branch = os.environ.get("RH_BRANCH")
+ref = os.environ.get("RH_REF")
 since = os.environ.get("RH_SINCE")
 until = os.environ.get("INPUT_UNTIL")
 convert_to_rst = os.environ.get("INPUT_CONVERT_TO_RST", "")
@@ -19,7 +20,7 @@ print("convert to rst:", convert_to_rst)
 run("jupyter-releaser prep-git")
 orig_dir = os.getcwd()
 os.chdir(CHECKOUT_NAME)
-output = get_version_entry(branch, target, "current", since=since, until=until)
+output = get_version_entry(ref, branch, target, "current", since=since, until=until)
 
 if convert_to_rst.lower() == "true":
     from pypandoc import convert_text
