@@ -77,9 +77,8 @@ def get_version_entry(
 
     util.log(f"Getting changes to {repo} since {since} on branch {branch}...")
 
-    until = until or util.run(f'git --no-pager log -n 1 {branch} --pretty=format:"%H"')
-
-    until = until.replace("%", "")
+    if until:
+        until = until.replace("%", "")
 
     md = generate_activity_md(
         repo,

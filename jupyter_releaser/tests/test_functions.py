@@ -55,7 +55,13 @@ def test_get_changelog_version_entry(py_package, mocker):
     branch = "foo"
     resp = changelog.get_version_entry(branch, "bar/baz", version)
     mocked_gen.assert_called_with(
-        "bar/baz", since=None, kind="pr", branch=branch, heading_level=2, auth=None
+        "bar/baz",
+        since=None,
+        until=None,
+        kind="pr",
+        branch=branch,
+        heading_level=2,
+        auth=None,
     )
 
     assert f"## {version}" in resp
@@ -68,6 +74,7 @@ def test_get_changelog_version_entry(py_package, mocker):
     mocked_gen.assert_called_with(
         "bar/baz",
         since=None,
+        until=None,
         kind="pr",
         branch=branch,
         heading_level=2,
