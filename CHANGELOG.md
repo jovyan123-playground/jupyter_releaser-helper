@@ -1,7 +1,7 @@
 # Changelog
 
 <!-- <START NEW CHANGELOG ENTRY> -->
-
+foo
 ## 0.4.5
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...cb86e29f8b042bf0d16a6c7dcfdd4c6fc267937c))
