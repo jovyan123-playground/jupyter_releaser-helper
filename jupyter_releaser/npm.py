@@ -143,7 +143,7 @@ def handle_npm_config(npm_token):
             auth_entry = ""
 
     text += f"\n{reg_entry}\n{auth_entry}"
-    text = text.strip()
+    text = text.strip() + "\n"
     util.log(f"writing npm config to {npmrc}:\n{text}")
     npmrc.write_text(text, encoding="utf-8")
 
