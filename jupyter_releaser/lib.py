@@ -281,6 +281,11 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     orig_dir = os.getcwd()
     os.chdir(util.CHECKOUT_NAME)
 
+    # Read in the config
+    config = util.read_config()
+    options = config.get("options", {})
+    npm_install_options = npm_install_options or options.get("npm-install-options", "")
+
     # Clean the dist folder
     dist = Path(dist_dir)
     if dist.exists():
@@ -306,7 +311,7 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     for asset in assets:
         suffix = Path(asset.name).suffix
         if suffix in [".gz", ".whl"]:
-            python.check_dist(path)
+            python.check_dist(dist / asset.name)
         elif suffix == ".tgz":
             pass  # already handled
         else:
