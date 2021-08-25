@@ -377,9 +377,9 @@ def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run):
         os.environ.setdefault("TWINE_USERNAME", "__token__")
 
     if len(glob(f"{dist_dir}/*.tgz")):
-        npm.handle_npm_config(npm_token, os.getcwd())
+        npm.handle_npm_config(npm_token)
         if npm_token:
-            util.run("npm whoami", cwd=os.getcwd())
+            util.run("npm whoami")
 
     found = False
     for path in sorted(glob(f"{dist_dir}/*.*")):
