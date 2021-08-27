@@ -45,7 +45,7 @@ def build_dist(package, dist_dir):
             data = json.loads(package_json.read_text(encoding="utf-8"))
             if data.get("private", False):
                 continue
-            paths.append(str(osp.abspath(path)))
+            paths.append(str(osp.abspath(path)).replace(os.sep, "/"))
 
         util.run(f"npm pack {' '.join(paths)}", cwd=dest, quiet=True)
 
