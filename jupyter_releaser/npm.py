@@ -45,9 +45,9 @@ def build_dist(package, dist_dir):
             data = json.loads(package_json.read_text(encoding="utf-8"))
             if data.get("private", False):
                 continue
-            paths.append(str(path))
+            paths.append(str(osp.abspath(path)))
 
-        util.run(f"npm pack {[' '.join(paths)]}", cwd=dest, quiet=True)
+        util.run(f"npm pack {' '.join(paths)}", cwd=dest, quiet=True)
 
 
 def extract_dist(dist_dir, target):
