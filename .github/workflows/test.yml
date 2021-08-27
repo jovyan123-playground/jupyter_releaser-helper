@@ -138,6 +138,8 @@ jobs:
           export RH_SINCE=
           export RH_UNTIL=
           export RH_CONVERT_TO_RST=true
+          sudo apt-get install pandoc
+          pip install pypandoc
           python -m jupyter_releaser.actions.generate-changelog
           cat CHANGELOG_ENTRY.md
       - name: Coverage
