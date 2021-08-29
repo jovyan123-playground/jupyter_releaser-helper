@@ -1,6 +1,7 @@
 # Changelog
 
 <!-- <START NEW CHANGELOG ENTRY> -->
+# foo6
 # foo5
 # foo4
 # foo3
