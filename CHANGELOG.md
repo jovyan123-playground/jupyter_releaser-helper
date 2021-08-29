@@ -4,6 +4,8 @@
 
 # hi
 # hi again
+# hi again 2
+
 ## 0.5.1
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...8d11e4a8b89a9717d88b960768ba3562fdffe133))
