@@ -2,6 +2,7 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+# foo26
 # foo25
 # foo24
 # foo23
