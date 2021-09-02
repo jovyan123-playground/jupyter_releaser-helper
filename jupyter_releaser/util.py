@@ -48,7 +48,7 @@ def run(cmd, **kwargs):
         return _run_win(cmd, **kwargs)
 
     quiet = kwargs.get("quiet")
-    quiet_error = kwargs.get("quiet_error")
+    quiet_error = kwargs.pop("quiet_error", False)
     kwargs.setdefault("echo", True)
     kwargs.setdefault("check", True)
 
