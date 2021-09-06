@@ -279,7 +279,7 @@ def read_config():
         data = toml.loads(PYPROJECT.read_text(encoding="utf-8"))
         config = data.get("tool", {}).get("jupyter-releaser") or {}
 
-    if PACKAGE_JSON.exists():
+    elif PACKAGE_JSON.exists():
         data = json.loads(PACKAGE_JSON.read_text(encoding="utf-8"))
         if "jupyter-releaser" in data:
             config = data["jupyter-releaser"]
