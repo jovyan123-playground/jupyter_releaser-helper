@@ -166,6 +166,7 @@ release-message: RH_RELEASE_MESSAGE
 repo: RH_REPOSITORY
 resolve-backports: RH_RESOLVE_BACKPORTS
 since: RH_SINCE
+since-last-stable: RH_SINCE_LAST_STABLE
 tag-format: RH_TAG_FORMAT
 tag-message: RH_TAG_MESSAGE
 twine-cmd: TWINE_COMMAND
