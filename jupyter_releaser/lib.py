@@ -126,10 +126,10 @@ def draft_changelog(
 | Branch  | {branch}  |
 | Version Spec | {version_spec} |
 """
-    if since:
-        body += f"| Since | {since} |"
-    elif since_last_stable:
+    if since_last_stable:
         body += "| Since Last Stable | true |"
+    elif since:
+        body += f"| Since | {since} |"
     util.log(body)
 
     make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=dry_run)
