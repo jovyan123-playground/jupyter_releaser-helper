@@ -528,7 +528,7 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     default="https://registry.npmjs.org/",
 )
 @click.option(
-    "--pypi-registry",
+    "--twine-registry",
     help="The pypi register to target for publishing",
     envvar="TWINE_REGISTRY",
     default="https://pypi.org/simple/",
