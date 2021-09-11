@@ -304,7 +304,7 @@ def _get_since(source, since_last_stable=False):
 
     if since_last_stable:
         stable_tag = re.compile(r"\d\.\d\.\d$")
-        tags = [t for t in tags.splitlines() if t.match(stable_tag, t)]
+        tags = [t for t in tags if re.search(stable_tag, t)]
         if not tags:
             return
         return tags[0]

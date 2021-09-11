@@ -201,8 +201,8 @@ since_options = [
     ),
     click.option(
         "--since-last-stable",
+        is_flag=True,
         envvar="RH_SINCE_LAST_STABLE",
-        default=None,
         help="Use PRs with activity since the last stable git tag",
     ),
 ]
