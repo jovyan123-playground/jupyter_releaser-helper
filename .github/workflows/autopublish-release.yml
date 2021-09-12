@@ -68,10 +68,8 @@ jobs:
           release_url: ${{ steps.draft-release-url.outputs.url }}
 
       - name: "** Next Step **"
-        env:
-          draft_release_url: ${{ steps.draft-release-url.outputs.url }}
         run: |
-          if [ ${draft_release_url} ];then
+          if [ ${{ steps.draft-release-url.outputs.url }} ];then
             echo "Verify the final release"
             echo ${{ steps.publish-release.outputs.release_url }}
             if [ ! -z "${{ steps.publish-release.outputs.pr_url }}" ]; then

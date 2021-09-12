@@ -63,10 +63,8 @@ jobs:
           since_last_stable: ${{ github.event.intputs.since_last_stable }}
 
       - name: "Store Auto Publish URL"
-        env:
-          auto_publish: ${{ github.events.inputs.auto_publish }}
         run: |
-          if [ ${auto_publish}} == 'true']; then
+          if [ ${{ github.events.inputs.auto_publish }} == 'true']; then
             echo ${{ steps.draft-release.outputs.release_url }} > "draft-release-url.txt"
           else:
             echo "Skipping auto publish"
@@ -81,10 +79,8 @@ jobs:
             draft-release-url.txt
 
       - name: "** Next Step **"
-        env:
-          auto_publish: ${{ github.events.inputs.auto_publish }}
         run: |
-          if [ ${auto_publish}} == 'true']; then
+          if [ ${{ github.events.inputs.auto_publish }} == 'true']; then
             echo "Wait for the 'Auto Publish workflow to complete';
           else
             echo "Run the "Publish Release" Workflow with Release Url:"
