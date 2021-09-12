@@ -27,7 +27,7 @@ jobs:
         run: |
           pip install --upgrade pip setuptools wheel --user
 
-      - name: "Download Draft Release URL artifact"
+      - name: Download Draft Release URL artifact
         uses: actions/github-script@v3.1.0
         with:
           script: |
