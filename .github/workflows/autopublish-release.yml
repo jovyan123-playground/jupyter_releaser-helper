@@ -77,5 +77,5 @@ jobs:
                echo ${{ steps.publish-release.outputs.pr_url }}
             fi
           else
-            echo "No Action Needed, Skipped Auto Release"
+            echo "No Action Needed, Skipped Auto Publish"
           fi
