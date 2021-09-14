@@ -373,11 +373,26 @@ def parse_release_url(release_url):
 
 
 def publish_assets(
-    dist_dir, npm_token, npm_cmd, twine_cmd, npm_registry, twine_registry, dry_run
+    dist_dir,
+    npm_token,
+    npm_cmd,
+    twine_cmd,
+    npm_registry,
+    twine_registry,
+    release_url,
+    dry_run,
 ):
     """Publish release asset(s)"""
     os.environ["NPM_REGISTRY"] = npm_registry
     os.environ["TWINE_REGISTRY"] = twine_registry
+
+    if len(glob(f"{dist_dir}/*.tgz")):
+        npm.handle_npm_config(npm_token)
+        if npm_token:
+            util.run("npm whoami")
+
+    if len(glob(f"{dist_dir}/*.whl")):
+        python.handle_npm_config(release_url)
 
     if dry_run:
         # Start local pypi server with no auth, allowing overwrites,
@@ -390,11 +405,6 @@ def publish_assets(
         npm_cmd = "npm publish --dry-run"
     else:
         os.environ.setdefault("TWINE_USERNAME", "__token__")
-
-    if len(glob(f"{dist_dir}/*.tgz")):
-        npm.handle_npm_config(npm_token)
-        if npm_token:
-            util.run("npm whoami")
 
     found = False
     for path in sorted(glob(f"{dist_dir}/*.*")):
