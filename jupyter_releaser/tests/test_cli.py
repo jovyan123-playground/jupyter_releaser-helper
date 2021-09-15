@@ -665,8 +665,6 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep):
     log = get_log()
     assert "before-publish-assets" in log
     assert "after-publish-assets" in log
-    assert os.environ["TWINE_PASSWORD"] == "foo"
-    del os.environ["TWINE_PASSWORD"]
 
 
 def test_publish_assets_npm(npm_dist, runner, mocker):

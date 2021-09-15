@@ -392,7 +392,7 @@ def publish_assets(
             util.run("npm whoami")
 
     if len(glob(f"{dist_dir}/*.whl")):
-        python.handle_pypi_token(release_url)
+        twine_token = python.get_pypi_token(release_url)
 
     if dry_run:
         # Start local pypi server with no auth, allowing overwrites,
@@ -401,7 +401,6 @@ def publish_assets(
             python.start_local_pypi()
             twine_cmd = "twine upload --repository-url=http://0.0.0.0:8081"
             os.environ["TWINE_USERNAME"] = "foo"
-            os.environ.setdefault("TWINE_PASSWORD", "bar")
         npm_cmd = "npm publish --dry-run"
     else:
         os.environ.setdefault("TWINE_USERNAME", "__token__")
@@ -411,7 +410,11 @@ def publish_assets(
         name = Path(path).name
         suffix = Path(path).suffix
         if suffix in [".gz", ".whl"]:
-            util.retry(f"{twine_cmd} {name}", cwd=dist_dir)
+            env = os.environ.copy()
+            env["TWINE_PASSWORD"] = twine_token
+            # NOTE: Do not print the env since a twine token extracted from
+            # a PYPI_TOKEN_MAP will not be sanitized in output
+            util.retry(f"{twine_cmd} {name}", cwd=dist_dir, env=env)
             found = True
         elif suffix == ".tgz":
             # Ignore already published versions
