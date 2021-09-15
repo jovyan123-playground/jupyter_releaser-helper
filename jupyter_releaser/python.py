@@ -67,7 +67,7 @@ def get_pypi_token(release_url):
     if it comes from the PYPI_TOKEN_MAP"""
     twine_pwd = os.environ.get("PYPI_TOKEN", "")
     pypi_token_map = os.environ.get("PYPI_TOKEN_MAP", "").replace(r"\n", "\n")
-    if pypi_token_map:
+    if pypi_token_map and release_url:
         parts = release_url.replace("https://github.com/", "").split("/")
         repo_name = f"{parts[0]}/{parts[1]}"
         util.log(f"Looking for pypi token for {repo_name} in token map")

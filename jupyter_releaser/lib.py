@@ -385,6 +385,7 @@ def publish_assets(
     """Publish release asset(s)"""
     os.environ["NPM_REGISTRY"] = npm_registry
     os.environ["TWINE_REGISTRY"] = twine_registry
+    twine_token = ""
 
     if len(glob(f"{dist_dir}/*.tgz")):
         npm.handle_npm_config(npm_token)
@@ -401,6 +402,7 @@ def publish_assets(
             python.start_local_pypi()
             twine_cmd = "twine upload --repository-url=http://0.0.0.0:8081"
             os.environ["TWINE_USERNAME"] = "foo"
+            twine_token = twine_token or "bar"
         npm_cmd = "npm publish --dry-run"
     else:
         os.environ.setdefault("TWINE_USERNAME", "__token__")

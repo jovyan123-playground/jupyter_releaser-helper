@@ -682,14 +682,7 @@ def test_publish_assets_npm(npm_dist, runner, mocker):
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
 
     runner(
-        [
-            "publish-assets",
-            "--npm-cmd",
-            "npm publish --dry-run",
-            "--dist-dir",
-            dist_dir,
-            HTML_URL,
-        ]
+        ["publish-assets", "--npm-cmd", "npm publish --dry-run", "--dist-dir", dist_dir]
     )
 
     assert called == 3, called

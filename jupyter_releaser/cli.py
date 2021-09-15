@@ -580,7 +580,7 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     default="https://pypi.org/simple/",
 )
 @add_options(dry_run_options)
-@click.argument("release-url", nargs=1)
+@click.argument("release-url", nargs=1, required=False)
 @use_checkout_dir()
 def publish_assets(
     dist_dir,
