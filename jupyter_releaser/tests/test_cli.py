@@ -648,12 +648,13 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep):
     orig_run = util.run
     called = 0
 
-    os.environ["PYPI_TOKEN_MAP"] = "snuffy/test,foo\nfizz/buzz,bar"
+    os.environ["PYPI_TOKEN_MAP"] = "snuffy/test,foo-token\nfizz/buzz,bar"
 
     def wrapped(cmd, **kwargs):
         nonlocal called
         if cmd.startswith("twine upload"):
-            called += 1
+            if kwargs["env"]["TWINE_PASSWORD"] == "foo-token":
+                called += 1
         return orig_run(cmd, **kwargs)
 
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
