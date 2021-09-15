@@ -62,7 +62,6 @@ def check_dist(dist_file, test_cmd=""):
 
 def handle_pypi_token(release_url):
     """Handle the PyPI token"""
-
     twine_pwd = os.environ.get("PYPI_TOKEN", "")
     pypi_token_map = os.environ.get("PYPI_TOKEN_MAP", "").replace(r"\n", "\n")
     if pypi_token_map:

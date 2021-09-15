@@ -379,8 +379,8 @@ def publish_assets(
     twine_cmd,
     npm_registry,
     twine_registry,
-    release_url,
     dry_run,
+    release_url,
 ):
     """Publish release asset(s)"""
     os.environ["NPM_REGISTRY"] = npm_registry
@@ -392,7 +392,7 @@ def publish_assets(
             util.run("npm whoami")
 
     if len(glob(f"{dist_dir}/*.whl")):
-        python.handle_npm_config(release_url)
+        python.handle_pypi_token(release_url)
 
     if dry_run:
         # Start local pypi server with no auth, allowing overwrites,
@@ -401,7 +401,7 @@ def publish_assets(
             python.start_local_pypi()
             twine_cmd = "twine upload --repository-url=http://0.0.0.0:8081"
             os.environ["TWINE_USERNAME"] = "foo"
-            os.environ["TWINE_PASSWORD"] = "bar"
+            os.environ.setdefault("TWINE_PASSWORD", "bar")
         npm_cmd = "npm publish --dry-run"
     else:
         os.environ.setdefault("TWINE_USERNAME", "__token__")

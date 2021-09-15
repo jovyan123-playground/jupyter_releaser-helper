@@ -648,6 +648,8 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep):
     orig_run = util.run
     called = 0
 
+    os.environ["PYPI_TOKEN_MAP"] = "snuffy/test,foo\nfizz/buzz,bar"
+
     def wrapped(cmd, **kwargs):
         nonlocal called
         if cmd.startswith("twine upload"):
@@ -657,12 +659,14 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep):
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
 
     dist_dir = py_package / util.CHECKOUT_NAME / "dist"
-    runner(["publish-assets", "--dist-dir", dist_dir, "--dry-run"])
+    runner(["publish-assets", "--dist-dir", dist_dir, "--dry-run", HTML_URL])
     assert called == 2, called
 
     log = get_log()
     assert "before-publish-assets" in log
     assert "after-publish-assets" in log
+    assert os.environ["TWINE_PASSWORD"] == "foo"
+    del os.environ["TWINE_PASSWORD"]
 
 
 def test_publish_assets_npm(npm_dist, runner, mocker):
@@ -685,6 +689,7 @@ def test_publish_assets_npm(npm_dist, runner, mocker):
             "npm publish --dry-run",
             "--dist-dir",
             dist_dir,
+            HTML_URL,
         ]
     )
 
@@ -715,6 +720,7 @@ def test_publish_assets_npm_exists(npm_dist, runner, mocker):
             "npm publish --dry-run",
             "--dist-dir",
             dist_dir,
+            HTML_URL,
         ]
     )
 
@@ -745,6 +751,7 @@ def test_publish_assets_npm_all_exists(npm_dist, runner, mocker):
                 "npm publish --dry-run",
                 "--dist-dir",
                 dist_dir,
+                HTML_URL,
             ]
         )
 
