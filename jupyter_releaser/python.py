@@ -70,16 +70,16 @@ def get_pypi_token(release_url):
     if pypi_token_map and release_url:
         parts = release_url.replace("https://github.com/", "").split("/")
         repo_name = f"{parts[0]}/{parts[1]}"
-        util.log(f"Looking for pypi token for {repo_name} in token map")
+        util.log(f"Looking for PYPI token for {repo_name} in token map")
         for line in pypi_token_map.splitlines():
             name, _, token = line.partition(",")
             if name == repo_name:
                 twine_pwd = token
-                util.log("Found pypi token")
+                util.log("Found PYPI token")
     elif twine_pwd:
-        util.log(f"Using pypi token from PYPI_TOKEN for {repo_name}")
+        util.log("Using PYPI token from PYPI_TOKEN")
     else:
-        util.log(f"Pypi token not found for {repo_name}")
+        util.log("PYPI token not found")
 
     return twine_pwd
 
