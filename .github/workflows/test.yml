@@ -168,6 +168,7 @@ jobs:
           set -eux
           pushd docs
           conda env create -f environment.yml
+          conda init
           conda activate jupyter_releaser_documentation
           pip install ..
           make html
