@@ -159,6 +159,7 @@ jobs:
           activate-environment: jupyter_releaser_documentation
           environment-file: docs/environment.yml
           python-version: "3.9"
+          auto-activate-base: false
       - name: Cache conda
         uses: actions/cache@v2
         with:
@@ -168,6 +169,7 @@ jobs:
       - name: Build docs
         run: |
           set -eux
+          which pip
           pip install .
           pushd docs
           make html
