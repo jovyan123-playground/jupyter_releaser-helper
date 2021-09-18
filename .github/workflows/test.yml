@@ -156,6 +156,8 @@ jobs:
         uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
+          activate-environment: jupyter_releaser_documentation
+          environment-file: docs/environment.yml
           python-version: "3.9"
       - name: Cache conda
         uses: actions/cache@v2
@@ -166,11 +168,7 @@ jobs:
       - name: Build docs
         run: |
           set -eux
+          pip install .
           pushd docs
-          conda env create -f environment.yml
-          conda init
-          conda activate jupyter_releaser_documentation
-          pip install ..
           make html
-          conda deactivate
           popd
