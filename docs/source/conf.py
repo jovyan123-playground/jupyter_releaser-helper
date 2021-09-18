@@ -22,18 +22,10 @@ project = "Jupyter Releaser"
 copyright = "2021, Project Jupyter"
 author = "Project Jupyter"
 
-# The full version, including alpha/beta/rc tags
-_version_py = osp.join(HERE, "..", "..", "jupyter_releaser", "_version.py")
-version_ns = {}
-
-with open(_version_py, mode="r") as version_file:
-    exec(version_file.read(), version_ns)
-
-# The short X.Y version.
-version = "%i.%i" % version_ns["version_info"][:2]
 # The full version, including alpha/beta/rc tags.
-release = version_ns["__version__"]
-
+release = "0.7.4"
+# The short X.Y version.
+version = ".".join(release.split(".")[:2])
 
 # -- General configuration ---------------------------------------------------
 
