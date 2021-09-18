@@ -145,3 +145,21 @@ jobs:
       - name: Coverage
         run: |
           codecov
+
+  docs:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 2
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: Build docs
+        run: |
+          set -eux
+          pushd docs
+          conda env create -f environment.yml
+          conda activate jupyter_releaser_documentation
+          pip install ..
+          make html
+          conda deactivate
+          popd
