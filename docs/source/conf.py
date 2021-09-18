@@ -23,7 +23,7 @@ copyright = "2021, Project Jupyter"
 author = "Project Jupyter"
 
 # The full version, including alpha/beta/rc tags
-_version_py = osp.join(HERE, "..", "..", "jupyterlab_server", "_version.py")
+_version_py = osp.join(HERE, "..", "..", "jupyter_releaser", "_version.py")
 version_ns = {}
 
 with open(_version_py, mode="r") as version_file:
