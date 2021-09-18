@@ -169,7 +169,7 @@ jobs:
       - name: Build docs
         run: |
           set -eux
-          which pip
+          conda activate jupyter_releaser_documentation
           pip install .
           pushd docs
           make html
