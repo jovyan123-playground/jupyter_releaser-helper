@@ -19,7 +19,7 @@ HERE = osp.abspath(osp.dirname(__file__))
 
 # -- Project information -----------------------------------------------------
 
-project = "Jupyter Releaser"
+project = 'Jupyter Releaser'
 copyright = "2021, Project Jupyter"
 author = "Project Jupyter"
 
