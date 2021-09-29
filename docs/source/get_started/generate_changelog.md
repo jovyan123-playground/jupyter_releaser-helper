@@ -2,7 +2,7 @@
 
 The "Generate Changelog" workflow is useful for repositories or branches that do not yet use Jupyter Releaser.
 
-You can generate a markdown or reStructureText changelog entry and manually apply it to the repo.
+You can generate a markdown or reStructuredText changelog entry and manually apply it to the repo.
 
 The workflow does not require any credentials.
 
