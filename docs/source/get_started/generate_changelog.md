@@ -1,4 +1,4 @@
-# Generate Changelog
+# Generating a Manual Changelog Entry
 
 The "Generate Changelog" workflow is useful for repositories or branches that do not yet use Jupyter Releaser.
 
