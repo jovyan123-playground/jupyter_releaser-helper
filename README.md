@@ -34,7 +34,7 @@ See [checklist](#Checklist-for-Adoption) below for details:
 When ready to make a release:
 
 1. Fork the `jupyter-releaser` repo and go to the Actions panel
-2. Select the `Draft Changelog` workflow
+2. Select the `Full Changelog` workflow
 3. Run the workflow with the version spec (usually the new version number). If making a final release after
    a prerelease series, you may wish to use the "until" parameter to include all the PRs since the last final release.
 
