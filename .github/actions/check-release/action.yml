@@ -39,4 +39,4 @@ runs:
       with:
         dry_run: true
         token: ${{ inputs.token }}
-        relase_url: ${{ steps.draft-release.outputs.release_url }}
+        release_url: ""
