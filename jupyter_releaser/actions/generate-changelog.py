@@ -1,9 +1,12 @@
 import os
 from pathlib import Path
 
+from jupyter_releaser.actions.common import setup
 from jupyter_releaser.changelog import get_version_entry
 from jupyter_releaser.util import CHECKOUT_NAME
 from jupyter_releaser.util import run
+
+setup()
 
 target = os.environ.get("RH_REPOSITORY")
 branch = os.environ.get("RH_BRANCH")

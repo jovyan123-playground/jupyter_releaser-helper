@@ -2,10 +2,18 @@
 # Distributed under the terms of the Modified BSD License.
 import os
 
+from jupyter_releaser.actions.common import setup
 from jupyter_releaser.util import run
 
+setup()
 release_url = os.environ["release_url"]
-run(f"jupyter-releaser extract-release {release_url}")
+check_release = os.environ.get("RH_IS_CHECK_RELEASE", "").lower() == "true"
+
+if not check_release:
+    run(f"jupyter-releaser extract-release {release_url}")
+
 run(f"jupyter-releaser forwardport-changelog {release_url}")
 run(f"jupyter-releaser publish-assets {release_url}")
-run(f"jupyter-releaser publish-release {release_url}")
+
+if not check_release:
+    run(f"jupyter-releaser publish-release {release_url}")
