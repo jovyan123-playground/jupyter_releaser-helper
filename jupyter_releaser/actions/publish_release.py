@@ -8,7 +8,7 @@ from jupyter_releaser.util import run
 setup()
 release_url = os.environ["release_url"]
 
-if not release_url:
+if release_url:
     run(f"jupyter-releaser extract-release {release_url}")
     run(f"jupyter-releaser forwardport-changelog {release_url}")
 
