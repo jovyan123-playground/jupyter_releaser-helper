@@ -39,7 +39,8 @@ runs:
   using: "composite"
   steps:
     - name: install-releaser
-      uses: ./github/actions/install-releaser
+      uses: ./.github/actions/install-releaser
+
     - shell: bash
       id: draft-release
       run: |

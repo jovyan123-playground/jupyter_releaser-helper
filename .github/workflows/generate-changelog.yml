@@ -26,7 +26,7 @@ jobs:
         python-version: ["3.9"]
     steps:
       - name: Setup
-        uses: ./.github/actions/common@
+        uses: ./.github/actions/common
 
       - name: Install the Extra Python dependencies
         run: |
