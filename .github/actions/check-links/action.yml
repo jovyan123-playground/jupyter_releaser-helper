@@ -9,10 +9,10 @@ runs:
     - name: Cache checked links
       uses: actions/cache@v2
       with:
-        path: ~/.cache/pytest-link-check
-        key: ${{ runner.os }}-linkcheck-${{ hashFiles('**/*.md', '**/*.rst') }}-links
+        path: ~/.cache/releaser-link-check
+        key: ${{ runner.os }}-releaser-linkcheck-${{ hashFiles('**/*.md', '**/*.rst') }}-links
         restore-keys: |
-          ${{ runner.os }}-linkcheck-
+          ${{ runner.os }}-releaser-linkcheck-
 
     - shell: bash
       id: check-links
